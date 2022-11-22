@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import { URLSearchParams, URL } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
+import { BASE_URL } from '@Configs/index';
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { User } from '@Models/index';
 import { NavigatorParamList } from '@Navigators/index';
@@ -19,7 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { styles } from './LoginStyles';
 
 // TODO: MOVE TO ENV
-const AUTH_URL = 'http://localhost:3001/auth/facebook';
+const AUTH_URL = `${BASE_URL}auth/facebook`;
 const URL_TYPE = 'url';
 
 const ALERT_OPEN_URL = 'Can not open this url';
