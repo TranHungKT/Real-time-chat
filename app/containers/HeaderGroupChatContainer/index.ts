@@ -1,0 +1,1 @@
+export { HeaderGroupChatContainer } from './HeaderGroupChatContainer';

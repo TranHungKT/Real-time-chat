@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["app/*"],
+      "@Navigators/*": ["app/navigators/*"],
+      "@Screens/*": ["app/screens/*"],
+      "@Themes/*": ["app/themes/*"],
+      "@Configs/*": ["app/configs/*"],
+      "@Stores/*": ["app/stores/*"],
+      "@Models/*": ["app/models/*"],
+      "@Constants/*": ["app/constants/*"],
+      "@Components/*": ["app/components/*"],
+      "@Providers/*": ["app/providers/*"],
+      "@Utils/*": ["app/utils/*"],
+      "@Services/*": ["app/services/*"],
+      "@Hooks/*": ["app/hooks/*"],
+      "@Containers/*": ["app/containers/*"]
+    }
+  },
+  "include": ["app"],
+  "files": ["app/globals.d.ts"]
+}

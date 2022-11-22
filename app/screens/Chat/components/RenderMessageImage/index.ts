@@ -1,0 +1,1 @@
+export { RenderMessageImage } from './RenderMessageImage';

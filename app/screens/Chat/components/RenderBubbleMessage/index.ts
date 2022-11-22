@@ -1,0 +1,1 @@
+export { RenderBubbleMessage } from './RenderBubbleMessage';

@@ -1,0 +1,1 @@
+export { MainTabBar } from './MainTabBar';

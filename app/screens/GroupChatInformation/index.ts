@@ -1,0 +1,1 @@
+export { GroupChatInformationScreen } from './GroupChatInformationScreen';
