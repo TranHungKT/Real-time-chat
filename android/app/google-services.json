@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "79995298353",
+    "project_id": "vietmatch-1579f",
+    "storage_bucket": "vietmatch-1579f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79995298353:android:60cff6c1598d5ed2c4ab10",
+        "android_client_info": {
+          "package_name": "com.telegramapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79995298353-2hcucdnu1v85iq4ieejvq7etjr45iq2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3xGhs24AlVRpdbjoCUaDsY9ryANUB-cA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79995298353-2hcucdnu1v85iq4ieejvq7etjr45iq2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
