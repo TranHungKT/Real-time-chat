@@ -14,6 +14,7 @@ import {
   ChatScreen,
   SplashScreen,
   GroupChatInformationScreen,
+  GettingCallScreen,
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -126,6 +127,7 @@ export type NavigatorParamList = {
   LoginScreen: undefined;
   MainTobTab: undefined;
   SplashSreen: undefined;
+  GettingCallScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -136,8 +138,9 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="SplashSreen"
+      initialRouteName="GettingCallScreen"
     >
+      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen} />
       <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
