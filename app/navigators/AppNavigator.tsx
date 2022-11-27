@@ -138,12 +138,12 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="GettingCallScreen"
+      initialRouteName="SplashSreen"
     >
-      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen} />
       <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
+      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen} />
     </Stack.Navigator>
   );
 };

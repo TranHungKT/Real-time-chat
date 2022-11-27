@@ -96,6 +96,7 @@ export const GettingCallScreen = () => {
       }
     }
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const hangUp = async () => {
     setGettingCall(false);
     connecting.current = false;

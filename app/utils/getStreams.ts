@@ -22,11 +22,13 @@ export default class GetStreams {
     const stream = await mediaDevices.getUserMedia({
       audio: true,
       video: {
-        width: 640,
-        height: 480,
-        frameRate: 30,
-        facingMode: isFront ? 'front' : 'environment',
-        deviceId: videoSourceId,
+        mandatory: {
+          minHeight: 480,
+          minWidth: 640,
+          minFrameRate: 30,
+        },
+        facingMode: isFront ? 'user' : 'environment',
+        optional: [videoSourceId],
       },
     });
 
