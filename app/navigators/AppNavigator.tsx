@@ -35,7 +35,6 @@ export default function Chat() {
       drawerContent={(props: any) => <DrawerContentContainer {...props} />}
     >
       <ChatScreenDrawer.Screen name="Chat" component={ChatScreen} />
-      <ChatScreenDrawer.Screen name="Chat2" component={ChatScreen} />
     </ChatScreenDrawer.Navigator>
   );
 }
