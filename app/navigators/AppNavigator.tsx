@@ -8,6 +8,7 @@ import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useSocket } from '@Hooks/useSocket';
+import { DrawerContentContainer } from '@Screens/Chat/containers/DrawerContentContainer';
 import {
   LoginScreen,
   HomeScreen,
@@ -18,12 +19,26 @@ import {
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { WebSocketContext, initSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
+const ChatScreenDrawer = createDrawerNavigator();
+export default function Chat() {
+  return (
+    <ChatScreenDrawer.Navigator
+      initialRouteName="Chat"
+      screenOptions={{ headerShown: false, drawerPosition: 'right' }}
+      drawerContent={(props: any) => <DrawerContentContainer {...props} />}
+    >
+      <ChatScreenDrawer.Screen name="Chat" component={ChatScreen} />
+      <ChatScreenDrawer.Screen name="Chat2" component={ChatScreen} />
+    </ChatScreenDrawer.Navigator>
+  );
+}
 export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
   ChatScreen: undefined;
@@ -67,7 +82,7 @@ const AllGroupChatContainer = () => {
   return (
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
-      <AllGroupChatStack.Screen name="ChatScreen" component={ChatScreen} />
+      <AllGroupChatStack.Screen name="ChatScreen" component={Chat} />
       <AllGroupChatStack.Screen
         name="GroupChatInformationScreen"
         component={GroupChatInformationScreen}

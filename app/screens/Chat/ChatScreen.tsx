@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingComponent } from '@Components/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { currentGroupSelector, groupsActions } from '@Stores/groups';
-import { useNavigation } from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { styles } from './ChatScreenStyles';
@@ -27,13 +27,21 @@ export const ChatScreen = () => {
     navigation.navigate('GroupChatInformationScreen');
   };
 
+  const handleClickRightIcon = () => {
+    navigation.dispatch(DrawerActions.openDrawer());
+  };
+
   if (!currentGroup) {
     return <LoadingComponent />;
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header onClickGoBack={handleClickGoBack} onClickName={handleClickName} />
+      <Header
+        onClickGoBack={handleClickGoBack}
+        onClickName={handleClickName}
+        onClickRightIcon={handleClickRightIcon}
+      />
       <ListChatsContainer />
     </SafeAreaView>
   );
