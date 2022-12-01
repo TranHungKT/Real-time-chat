@@ -10,10 +10,11 @@ import { styles } from './HeaderStyles';
 interface HeaderProps {
   onClickGoBack?: () => void;
   onClickName: () => void;
+  onClickRightIcon: () => void;
 }
 
 export const Header = (props: HeaderProps) => {
-  const { onClickGoBack, onClickName } = props;
+  const { onClickGoBack, onClickName, onClickRightIcon } = props;
 
   const navigation = useNavigation();
 
@@ -32,7 +33,7 @@ export const Header = (props: HeaderProps) => {
         <HeaderGroupChatContainer onClickHeader={onClickName} />
       </View>
       {/* Comment because we need to use video call instead, will get back later */}
-      {/* <TouchableOpacity style={styles.profileIconView}>
+      <TouchableOpacity style={styles.profileIconView} onPress={onClickRightIcon}>
         <View style={styles.profileIconRow}>
           <Icon name="circle-small" size={35} style={styles.profileIcon} />
           <Icon name="circle-small" size={35} style={styles.profileIcon} />
@@ -41,9 +42,7 @@ export const Header = (props: HeaderProps) => {
           <Icon name="circle-small" size={35} style={styles.profileIcon} />
           <Icon name="circle-small" size={35} style={styles.profileIcon} />
         </View>
-      </TouchableOpacity> */}
-
-      <Icon name="video" color={palette.blue} size={32} />
+      </TouchableOpacity>
     </View>
   );
 };

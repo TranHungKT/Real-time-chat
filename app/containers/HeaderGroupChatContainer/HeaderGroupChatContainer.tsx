@@ -1,4 +1,4 @@
-import { Text, Image, TouchableOpacity, View } from 'react-native';
+import { Text, Image, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { UserStatus } from '@Models/index';
@@ -10,10 +10,11 @@ import { styles } from './HeaderGroupChatContainerStyles';
 
 interface HeaderGroupChatContainerProps {
   onClickHeader?: () => void;
+  styleContainer?: ViewStyle;
 }
 
 export const HeaderGroupChatContainer = (props: HeaderGroupChatContainerProps) => {
-  const { onClickHeader } = props;
+  const { onClickHeader, styleContainer } = props;
 
   const currentGroup = useSelector(currentGroupSelector);
   const userId = useSelector(userIdSelector);
@@ -29,7 +30,11 @@ export const HeaderGroupChatContainer = (props: HeaderGroupChatContainerProps) =
   }
 
   return (
-    <TouchableOpacity onPress={onClickHeader} style={styles.container} disabled={!onClickHeader}>
+    <TouchableOpacity
+      onPress={onClickHeader}
+      style={[styles.container, styleContainer]}
+      disabled={!onClickHeader}
+    >
       <Image
         source={getImageSource(currentGroup.groupAvatar, isMoreThan2Member)}
         style={styles.avatar}
