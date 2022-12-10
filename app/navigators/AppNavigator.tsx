@@ -15,7 +15,7 @@ import {
   ChatScreen,
   SplashScreen,
   GroupChatInformationScreen,
-  GettingCallScreen,
+  GettingCallScreen2,
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -157,7 +157,7 @@ const AppStack = () => {
       <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
-      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen} />
+      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen2} />
     </Stack.Navigator>
   );
 };

@@ -194,6 +194,7 @@ export const GettingCallScreen = () => {
   if (localStream) {
     return <Video hangUp={hangUp} localStream={localStream} remoteStream={remoteStream} />;
   }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={create}>
