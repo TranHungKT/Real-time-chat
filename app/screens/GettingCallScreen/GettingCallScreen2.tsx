@@ -21,14 +21,6 @@ import { Video } from './components/Video/Video';
 
 const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 
-const sessionConstraints = {
-  mandatory: {
-    OfferToReceiveAudio: true,
-    OfferToReceiveVideo: true,
-    VoiceActivityDetection: true,
-  },
-};
-
 export const GettingCallScreen2 = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -62,9 +54,8 @@ export const GettingCallScreen2 = () => {
 
   const createOfferForCalling = async () => {
     if (peerConnection.current) {
-      const offerDescription = (await peerConnection.current.createOffer(
-        sessionConstraints,
-      )) as RTCSessionDescription;
+      const offerDescription =
+        (await peerConnection.current.createOffer()) as RTCSessionDescription;
       await peerConnection.current.setLocalDescription(offerDescription);
 
       sendOfferToUser(offerDescription);
