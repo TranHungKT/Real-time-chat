@@ -42,6 +42,7 @@ export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
   ChatScreen: undefined;
   GroupChatInformationScreen: undefined;
+  GettingCallScreen: undefined;
 };
 
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
@@ -86,6 +87,7 @@ const AllGroupChatContainer = () => {
         name="GroupChatInformationScreen"
         component={GroupChatInformationScreen}
       />
+      <AllGroupChatStack.Screen name="GettingCallScreen" component={GettingCallScreen2} />
     </AllGroupChatStack.Navigator>
   );
 };
@@ -141,7 +143,6 @@ export type NavigatorParamList = {
   LoginScreen: undefined;
   MainTobTab: undefined;
   SplashSreen: undefined;
-  GettingCallScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -157,7 +158,6 @@ const AppStack = () => {
       <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
-      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen2} />
     </Stack.Navigator>
   );
 };

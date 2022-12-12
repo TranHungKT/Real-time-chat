@@ -40,7 +40,7 @@ export const UnReadMessageContainer = (props: UnReadMessageContainerProps) => {
     }
 
     if (numberOfUnReadMessage === 0) {
-      return '';
+      return undefined;
     }
 
     if (numberOfUnReadMessage < 10) {

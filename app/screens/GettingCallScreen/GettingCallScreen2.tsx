@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MediaStream, RTCPeerConnection, RTCSessionDescription } from 'react-native-webrtc';
+import {
+  MediaStream,
+  RTCPeerConnection,
+  RTCSessionDescription,
+  RTCIceCandidate,
+} from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { palette } from 'themes';
 import GetStreams from 'utils/getStreams';
@@ -29,7 +34,7 @@ export const GettingCallScreen2 = () => {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [gettingCall, setGettingCall] = useState(false);
-
+  const [newOffer, setNewOffer] = useState<any>();
   const currentGroup = useSelector(currentGroupSelector);
 
   const peerConnection = useRef<RTCPeerConnection | null>(null);
@@ -77,55 +82,94 @@ export const GettingCallScreen2 = () => {
   };
 
   const handleAddNewIceCandidate = (remoteIceCandidate: any) => {
-    const candidate = new RTCIceCandidate(remoteIceCandidate);
-
-    peerConnection.current?.addIceCandidate(candidate);
+    console.log({ remoteIceCandidate });
+    if (remoteIceCandidate.candidate) {
+      const candidate = new RTCIceCandidate(remoteIceCandidate);
+      if (peerConnection.current) {
+        peerConnection.current.addIceCandidate(candidate);
+      }
+    }
   };
 
   useEffect(() => {
     if (peerConnection.current) {
-      peerConnection.current.addEventListener('addstream', (event: any) => {
-        setRemoteStream(event.stream);
-      });
-
-      peerConnection.current.addEventListener('icecandidate', (event: any) => {
-        if (!event.candidate) {
-          return;
+      peerConnection.current.onicecandidate = (event: any) => {
+        if (event.candidate) {
+          socket.emit(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, {
+            groupId: currentGroup?._id,
+            iceCandidate: event.candidate,
+          });
         }
-
-        socket.emit(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, {
-          groupId: currentGroup?._id,
-          iceCandidate: event.candidate,
-        });
-      });
+      };
+      peerConnection.current.onaddstream = (event: any) => {
+        console.log('event roemote', event.stream);
+        setRemoteStream(event.stream);
+      };
     }
-  }, [currentGroup?._id, peerConnection, socket]);
+  }, [currentGroup?._id, socket, gettingCall, localStream]);
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, (payload: any) => {
-      handleAddNewIceCandidate(payload.candidate);
+      console.log('asdasd', payload);
+      console.log(!!payload.iceCandidate);
+      if (payload.iceCandidate) {
+        handleAddNewIceCandidate(payload.iceCandidate);
+      }
     });
 
     socket.on(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, async (payload: any) => {
-      setGettingCall(true);
-
-      const offerDescription = new RTCSessionDescription(payload.offer);
-      await peerConnection.current?.setRemoteDescription(offerDescription);
-
-      const answerDescription = (await peerConnection.current?.createAnswer({
-        sessionConstraints,
-      })) as RTCSessionDescription;
-      await peerConnection.current?.setLocalDescription(answerDescription);
-
-      socket.emit(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, {
-        groupId: currentGroup?._id,
-        answer: answerDescription,
-      });
+      if (payload.offer) {
+        await createPeerConnection();
+        setGettingCall(true);
+        setNewOffer(payload);
+      }
     });
+
+    socket.on(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, async (payload) => {
+      try {
+        if (peerConnection.current && payload.answer) {
+          const answerDescription = new RTCSessionDescription(payload.answer);
+
+          await peerConnection.current.setRemoteDescription(answerDescription);
+        }
+      } catch (error) {
+        console.log('error answer event', error);
+      }
+    });
+
+    return () => {
+      socket.off(SOCKET_EVENTS.ICE_CANDIDATE_EVENT);
+    };
   }, [currentGroup?._id, socket]);
 
+  const joinCall = async () => {
+    try {
+      const stream = await getMediaStream();
+      if (peerConnection.current && stream) {
+        peerConnection.current.addStream(stream);
+      }
+
+      if (peerConnection.current) {
+        const offerDescription = new RTCSessionDescription(newOffer.offer);
+        await peerConnection.current.setRemoteDescription(offerDescription);
+
+        const answerDescription = await peerConnection.current.createAnswer();
+        await peerConnection.current.setLocalDescription(answerDescription as any);
+
+        socket.emit(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, {
+          groupId: currentGroup?._id,
+          answer: answerDescription,
+        });
+      }
+
+      setGettingCall(false);
+    } catch (error) {
+      console.log('error to join cala', error);
+    }
+  };
+
   if (gettingCall) {
-    return <GettingCall hangUp={() => {}} join={() => {}} />;
+    return <GettingCall hangUp={() => {}} join={joinCall} />;
   }
   if (localStream) {
     return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;

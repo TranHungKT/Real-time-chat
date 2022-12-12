@@ -5,8 +5,6 @@ export default class GetStreams {
     let isFront = true;
     const sourceInfos: any = await mediaDevices.enumerateDevices();
 
-    console.log(sourceInfos);
-
     let videoSourceId;
     for (let i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
