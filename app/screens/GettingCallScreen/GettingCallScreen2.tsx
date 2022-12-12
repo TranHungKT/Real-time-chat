@@ -1,13 +1,9 @@
-import { useState, useRef, useEffect, useContext } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { PeerConnectionContext } from 'providers/CallVideoProvider';
+import { useState, useEffect, useContext } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  MediaStream,
-  RTCPeerConnection,
-  RTCSessionDescription,
-  RTCIceCandidate,
-  RTCSessionDescriptionType,
-} from 'react-native-webrtc';
+import { MediaStream, RTCSessionDescription, RTCSessionDescriptionType } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { palette } from 'themes';
 import GetStreams from 'utils/getStreams';
@@ -20,8 +16,6 @@ import { styles } from './GettingCallScreenStyles';
 import { GettingCall } from './components/GettingCall/GettingCall';
 import { Video } from './components/Video/Video';
 
-const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
-
 export const GettingCallScreen2 = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -30,21 +24,17 @@ export const GettingCallScreen2 = () => {
   const [newOffer, setNewOffer] = useState<any>();
   const currentGroup = useSelector(currentGroupSelector);
 
-  const peerConnection = useRef<RTCPeerConnection | null>(null);
+  const peerConnection = useContext(PeerConnectionContext);
 
   const getMediaStream = async () => {
     const stream: MediaStream | null = await GetStreams.getStream();
 
-    if (peerConnection.current && stream) {
+    if (peerConnection && stream) {
       setLocalStream(stream);
-      peerConnection.current.addStream(stream);
+      peerConnection.addStream(stream);
       return stream;
     }
     return null;
-  };
-
-  const createPeerConnection = async () => {
-    peerConnection.current = new RTCPeerConnection(configuration);
   };
 
   const sendOfferToUser = async (offer: RTCSessionDescription) => {
@@ -55,44 +45,32 @@ export const GettingCallScreen2 = () => {
   };
 
   const createOfferForCalling = async () => {
-    if (peerConnection.current) {
-      const offerDescription =
-        (await peerConnection.current.createOffer()) as RTCSessionDescription;
-      await peerConnection.current.setLocalDescription(offerDescription);
+    if (peerConnection) {
+      const offerDescription = (await peerConnection.createOffer()) as RTCSessionDescription;
+      await peerConnection.setLocalDescription(offerDescription);
 
       sendOfferToUser(offerDescription);
     }
   };
 
   const createCall = async () => {
-    await createPeerConnection();
     await getMediaStream();
 
     await createOfferForCalling();
   };
 
-  const handleAddNewIceCandidate = (remoteIceCandidate: any) => {
-    if (remoteIceCandidate.candidate) {
-      const candidate = new RTCIceCandidate(remoteIceCandidate);
-      if (peerConnection.current) {
-        peerConnection.current.addIceCandidate(candidate);
-      }
-    }
-  };
-
   const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
     const description = new RTCSessionDescription(newDescription);
-    if (peerConnection.current) {
-      await peerConnection.current.setRemoteDescription(description);
+    if (peerConnection) {
+      await peerConnection.setRemoteDescription(description);
     }
   };
 
   const handleCreateAnswerDescription = async () => {
-    if (peerConnection.current) {
-      const answerDescription =
-        (await peerConnection.current.createAnswer()) as RTCSessionDescription;
+    if (peerConnection) {
+      const answerDescription = (await peerConnection.createAnswer()) as RTCSessionDescription;
 
-      await peerConnection.current.setLocalDescription(answerDescription);
+      await peerConnection.setLocalDescription(answerDescription);
 
       return answerDescription;
     }
@@ -104,52 +82,6 @@ export const GettingCallScreen2 = () => {
       answer: answerDescription,
     });
   };
-
-  useEffect(() => {
-    if (peerConnection.current) {
-      peerConnection.current.onicecandidate = (event: any) => {
-        if (event.candidate) {
-          socket.emit(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, {
-            groupId: currentGroup?._id,
-            iceCandidate: event.candidate,
-          });
-        }
-      };
-      peerConnection.current.onaddstream = (event: any) => {
-        setRemoteStream(event.stream);
-      };
-    }
-  }, [currentGroup?._id, socket, gettingCall, localStream]);
-
-  useEffect(() => {
-    socket.on(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, (payload: any) => {
-      if (payload.iceCandidate) {
-        handleAddNewIceCandidate(payload.iceCandidate);
-      }
-    });
-
-    socket.on(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, async (payload: any) => {
-      if (payload.offer) {
-        await createPeerConnection();
-        setGettingCall(true);
-        setNewOffer(payload);
-      }
-    });
-
-    socket.on(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, async (payload) => {
-      try {
-        if (payload.answer) {
-          await handleRemoteDescription(payload.answer);
-        }
-      } catch (error) {
-        console.log('error answer event', error);
-      }
-    });
-
-    return () => {
-      socket.off(SOCKET_EVENTS.ICE_CANDIDATE_EVENT);
-    };
-  }, [currentGroup?._id, socket]);
 
   const joinCall = async () => {
     try {
@@ -165,6 +97,40 @@ export const GettingCallScreen2 = () => {
       console.log('error to join call', error);
     }
   };
+  useEffect(() => {
+    if (peerConnection) {
+      peerConnection.onicecandidate = (event: any) => {
+        if (event.candidate) {
+          socket.emit(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, {
+            groupId: currentGroup?._id,
+            iceCandidate: event.candidate,
+          });
+        }
+      };
+      peerConnection.onaddstream = (event: any) => {
+        setRemoteStream(event.stream);
+      };
+    }
+  }, [currentGroup?._id, socket, gettingCall, localStream, peerConnection]);
+
+  useEffect(() => {
+    socket.on(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, async (payload: any) => {
+      if (payload.offer) {
+        setGettingCall(true);
+        setNewOffer(payload);
+      }
+    });
+
+    socket.on(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, async (payload) => {
+      try {
+        if (payload.answer) {
+          await handleRemoteDescription(payload.answer);
+        }
+      } catch (error) {
+        console.log('error answer event', error);
+      }
+    });
+  }, [currentGroup?._id, handleRemoteDescription, socket]);
 
   if (gettingCall) {
     return <GettingCall hangUp={() => {}} join={joinCall} />;

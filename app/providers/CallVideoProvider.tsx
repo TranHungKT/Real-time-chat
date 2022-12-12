@@ -1,22 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useContext, useState, useRef } from 'react';
-import { MediaStream, RTCPeerConnection } from 'react-native-webrtc';
-
-import { WebSocketContext } from './WebSocketProvider';
+import { createContext } from 'react';
+import { RTCPeerConnection } from 'react-native-webrtc';
 
 const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 
-const CallVideoProvider = () => {
-  const socket = useContext(WebSocketContext);
-  const [startCalling, setStartCalling] = useState(false);
-
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-
-  const peerConnection = useRef<RTCPeerConnection>(null);
-
-  const startCall = () => {};
-
-  return <></>;
+export const initPeerConnection = async () => {
+  try {
+    return new RTCPeerConnection(configuration);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
-
-export default CallVideoProvider;
+export const PeerConnectionContext = createContext<RTCPeerConnection>(null as any);

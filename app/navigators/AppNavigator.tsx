@@ -1,6 +1,8 @@
+import { usePeerConnection } from 'hooks/usePeerConnection';
 import { isEmpty } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
+import { RTCPeerConnection } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
 
@@ -23,6 +25,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { initPeerConnection, PeerConnectionContext } from '../providers/CallVideoProvider';
 import { WebSocketContext, initSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
@@ -53,6 +56,7 @@ const AllGroupChat = () => {
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
   const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
+  const peerConnection = useRef<RTCPeerConnection | null>(null);
 
   useEffect(() => {
     if (socket) {
@@ -64,21 +68,32 @@ const AllGroupChat = () => {
         setCurrentSocket(undefined);
       });
     }
-  });
+  }, [socket]);
 
-  if (isEmpty(socket)) {
+  useEffect(() => {
+    const createPeerConnection = async () => {
+      peerConnection.current = await initPeerConnection();
+    };
+    createPeerConnection();
+  }, []);
+
+  if (isEmpty(socket) || !peerConnection.current) {
     return <LoadingComponent />;
   }
 
   return (
     <WebSocketContext.Provider value={socket}>
-      <AllGroupChatContainer />
+      <PeerConnectionContext.Provider value={peerConnection.current}>
+        <AllGroupChatContainer />
+      </PeerConnectionContext.Provider>
     </WebSocketContext.Provider>
   );
 };
 
 const AllGroupChatContainer = () => {
   useSocket();
+  usePeerConnection();
+
   return (
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
