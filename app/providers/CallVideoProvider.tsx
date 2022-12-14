@@ -7,7 +7,6 @@ export const initPeerConnection = async () => {
   try {
     return new RTCPeerConnection(configuration);
   } catch (error) {
-    console.log(error);
     return null;
   }
 };

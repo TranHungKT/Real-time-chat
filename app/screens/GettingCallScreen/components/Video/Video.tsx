@@ -18,8 +18,7 @@ export const Video = (props: VideoProps) => {
       </View>
     );
   }
-  console.log({ remoteStream });
-  console.log({ localStream });
+
   if (localStream && remoteStream) {
     return (
       <View style={styles.container}>
