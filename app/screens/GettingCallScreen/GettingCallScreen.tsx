@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { Video } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useMediaStream } from '@Hooks/useMediaStream';
+import { useRemoteDescription } from '@Hooks/useRemoteDescription';
 import { WebSocketContext } from '@Providers/index';
 import { getGroupIdSelector, getNewOfferSelector } from '@Stores/callVideo';
 
@@ -21,19 +22,17 @@ export const GettingCallScreen = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [gettingCall, setGettingCall] = useState(false);
+  const [isGettingCall, setIsGettingCall] = useState(false);
 
   const newOffer = useSelector(getNewOfferSelector);
   const groupId = useSelector(getGroupIdSelector);
   const peerConnection = useContext(PeerConnectionContext);
 
   const getMediaStream = useMediaStream();
+  const onHandleRemoteDescription = useRemoteDescription();
 
   const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
-    const description = new RTCSessionDescription(newDescription);
-    if (peerConnection) {
-      await peerConnection.setRemoteDescription(description);
-    }
+    onHandleRemoteDescription({ newDescription, peerConnection });
   };
 
   const handleCreateAnswerDescription = async () => {
@@ -66,14 +65,14 @@ export const GettingCallScreen = () => {
 
         emitAnswerEvent(answerDescription);
 
-        setGettingCall(false);
+        setIsGettingCall(false);
       }
     } catch (error) {
       console.log('error to join call', error);
     }
   };
   useEffect(() => {
-    setGettingCall(true);
+    setIsGettingCall(true);
   }, []);
 
   useEffect(() => {
@@ -90,9 +89,9 @@ export const GettingCallScreen = () => {
         setRemoteStream(event.stream);
       };
     }
-  }, [groupId, socket, gettingCall, localStream, peerConnection]);
+  }, [groupId, peerConnection, socket]);
 
-  if (gettingCall) {
+  if (isGettingCall) {
     return <GettingCall hangUp={() => {}} join={joinCall} />;
   }
   if (localStream) {

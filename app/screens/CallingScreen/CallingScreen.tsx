@@ -1,4 +1,3 @@
-import { PeerConnectionContext } from 'providers/CallVideoProvider';
 import { useState, useEffect, useContext } from 'react';
 import {
   EventOnAddStream,
@@ -8,10 +7,10 @@ import {
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 
-import { Video } from '@Components/index';
+import { Video, LoadingComponent } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useMediaStream } from '@Hooks/useMediaStream';
-import { WebSocketContext } from '@Providers/index';
+import { WebSocketContext, PeerConnectionContext } from '@Providers/index';
 import { currentGroupSelector } from '@Stores/groups';
 
 export const CallingScreen = () => {
@@ -75,5 +74,5 @@ export const CallingScreen = () => {
     return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;
   }
 
-  return <></>;
+  return <LoadingComponent />;
 };

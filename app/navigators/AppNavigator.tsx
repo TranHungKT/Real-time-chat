@@ -1,4 +1,3 @@
-import { usePeerConnection } from 'hooks/usePeerConnection';
 import { isEmpty } from 'lodash';
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
@@ -9,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { usePeerConnection } from '@Hooks/usePeerConnection';
 import { useSocket } from '@Hooks/useSocket';
 import { DrawerContentContainer } from '@Screens/Chat/containers/DrawerContentContainer';
 import {
