@@ -1,11 +1,9 @@
-import { mediaDevices } from 'react-native-webrtc';
+import { mediaDevices, MediaStream } from 'react-native-webrtc';
 
 export default class GetStreams {
-  static async getStream() {
+  static async getStream(): Promise<MediaStream | null> {
     let isFront = true;
     const sourceInfos: any = await mediaDevices.enumerateDevices();
-
-    console.log(sourceInfos);
 
     let videoSourceId;
     for (let i = 0; i < sourceInfos.length; i++) {
@@ -33,7 +31,7 @@ export default class GetStreams {
     });
 
     if (typeof stream !== 'boolean') {
-      return stream;
+      return stream as MediaStream;
     }
     return null;
   }

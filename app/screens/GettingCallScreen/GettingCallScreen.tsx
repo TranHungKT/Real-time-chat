@@ -1,204 +1,102 @@
-import { useRef, useState, useEffect } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { PeerConnectionContext } from 'providers/CallVideoProvider';
+import { useState, useEffect, useContext } from 'react';
 import {
-  MediaStream,
-  RTCPeerConnection,
   EventOnAddStream,
-  RTCIceCandidate,
+  EventOnCandidate,
+  MediaStream,
   RTCSessionDescription,
+  RTCSessionDescriptionType,
 } from 'react-native-webrtc';
-import GetStreams from 'utils/getStreams';
+import { useSelector } from 'react-redux';
 
-import { palette } from '@Themes/index';
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { Video } from '@Components/index';
+import { SOCKET_EVENTS } from '@Constants/index';
+import { useMediaStream } from '@Hooks/useMediaStream';
+import { useRemoteDescription } from '@Hooks/useRemoteDescription';
+import { WebSocketContext } from '@Providers/index';
+import { getGroupIdSelector, getNewOfferSelector } from '@Stores/callVideo';
 
-import { styles } from './GettingCallScreenStyles';
 import { GettingCall } from './components/GettingCall/GettingCall';
-import { Video } from './components/Video/Video';
-
-const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
 
 export const GettingCallScreen = () => {
-  const [localStream, setLocalStream] = useState<MediaStream | null>();
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>();
-  const [gettingCall, setGettingCall] = useState(false);
-  const pc = useRef<RTCPeerConnection>();
+  const socket = useContext(WebSocketContext);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [isGettingCall, setIsGettingCall] = useState(false);
 
-  const connecting = useRef(false);
+  const newOffer = useSelector(getNewOfferSelector);
+  const groupId = useSelector(getGroupIdSelector);
+  const peerConnection = useContext(PeerConnectionContext);
 
-  const setupWebrtc = async () => {
-    pc.current = new RTCPeerConnection(configuration);
+  const getMediaStream = useMediaStream();
+  const onHandleRemoteDescription = useRemoteDescription();
 
-    const stream = await GetStreams.getStream();
-
-    if (stream) {
-      setLocalStream(stream);
-      pc.current.addStream(stream);
-    }
-
-    pc.current.onaddstream = (event: EventOnAddStream) => {
-      setRemoteStream(event.stream);
-    };
+  const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
+    onHandleRemoteDescription({ newDescription, peerConnection });
   };
 
-  const create = async () => {
-    console.log('Calling');
-    connecting.current = true;
-    await setupWebrtc();
+  const handleCreateAnswerDescription = async () => {
+    if (peerConnection) {
+      const answerDescription = (await peerConnection.createAnswer()) as RTCSessionDescription;
 
-    const cRef = firestore().collection('meet').doc('chatId');
+      await peerConnection.setLocalDescription(answerDescription);
 
-    collectIceCandidates(cRef, 'caller', 'callee');
-
-    if (pc.current) {
-      const offer = await pc.current.createOffer();
-
-      pc.current.setLocalDescription(offer);
-
-      const cWithOffer = {
-        offer: {
-          type: offer.type,
-          sdp: offer.sdp,
-        },
-      };
-
-      cRef.set(cWithOffer);
-    }
-  };
-  const join = async () => {
-    console.log('Joining the call');
-    connecting.current = true;
-
-    setGettingCall(false);
-    const cRef = firestore().collection('meet').doc('chatId');
-    const offer = (await cRef.get()).data()?.offer;
-
-    if (offer) {
-      await setupWebrtc();
-
-      collectIceCandidates(cRef, 'callee', 'caller');
-
-      if (pc.current) {
-        pc.current.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await pc.current.createAnswer();
-
-        pc.current.setLocalDescription(answer);
-
-        const cWithAnswer = {
-          answer: {
-            type: answer.type,
-            sdp: answer.sdp,
-          },
-        };
-
-        cRef.update(cWithAnswer);
-      }
-    }
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const hangUp = async () => {
-    setGettingCall(false);
-    connecting.current = false;
-    streamCleanUp();
-    firestoreCleanUp();
-
-    if (pc.current) {
-      pc.current.close();
+      return answerDescription;
     }
   };
 
-  const streamCleanUp = async () => {
-    if (localStream) {
-      localStream.getTracks().forEach((t) => t.stop());
-      localStream.release();
-    }
-    setLocalStream(null);
-    setRemoteStream(null);
-  };
-  const firestoreCleanUp = async () => {
-    const cRef = firestore().collection('meet').doc('chatId');
-    if (cRef) {
-      const calleeCandidate = await cRef.collection('callee').get();
-      calleeCandidate.forEach(async (candidate) => {
-        await candidate.ref.delete();
-      });
-
-      const callerCandidate = await cRef.collection('caller').get();
-      callerCandidate.forEach(async (candidate) => {
-        await candidate.ref.delete();
-      });
-
-      cRef.delete();
-    }
-  };
-
-  const collectIceCandidates = async (
-    cRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>,
-    localName: string,
-    remoteName: string,
-  ) => {
-    const candiateCollection = cRef.collection(localName);
-
-    if (pc.current) {
-      pc.current.onicecandidate = (event) => {
-        if (event.candidate) {
-          candiateCollection.add(event.candidate);
-        }
-      };
-    }
-
-    cRef.collection(remoteName).onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change: any) => {
-        if (change.type === 'added') {
-          const candiate = new RTCIceCandidate(change.doc.data());
-          pc.current?.addIceCandidate(candiate);
-        }
-      });
+  const emitAnswerEvent = (answerDescription?: RTCSessionDescription) => {
+    socket.emit(SOCKET_EVENTS.ANSWER_FOR_CALL_EVENT, {
+      groupId: groupId,
+      answer: answerDescription,
     });
   };
+
+  const joinCall = async () => {
+    try {
+      if (newOffer) {
+        const stream = await getMediaStream(peerConnection);
+        if (stream) {
+          setLocalStream(stream);
+        }
+
+        await handleRemoteDescription(newOffer);
+        const answerDescription = await handleCreateAnswerDescription();
+
+        emitAnswerEvent(answerDescription);
+
+        setIsGettingCall(false);
+      }
+    } catch (error) {
+      console.log('error to join call', error);
+    }
+  };
+  useEffect(() => {
+    setIsGettingCall(true);
+  }, []);
 
   useEffect(() => {
-    const cRef = firestore().collection('meet').doc('chatId');
-
-    const subcribe = cRef.onSnapshot((snapshot) => {
-      const data = snapshot.data();
-
-      if (pc.current && !pc.current.remoteDescription && data && data.answer) {
-        pc.current.setRemoteDescription(new RTCSessionDescription(data.answer));
-      }
-
-      if (data && data.offer && !connecting.current) {
-        console.log('lol');
-        setGettingCall(true);
-      }
-    });
-
-    const subcribeDelete = cRef.collection('callee').onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'removed') {
-          hangUp();
+    if (peerConnection) {
+      peerConnection.onicecandidate = (event: EventOnCandidate) => {
+        if (event.candidate) {
+          socket.emit(SOCKET_EVENTS.ICE_CANDIDATE_EVENT, {
+            groupId: groupId,
+            iceCandidate: event.candidate,
+          });
         }
-      });
-    });
+      };
+      peerConnection.onaddstream = (event: EventOnAddStream) => {
+        setRemoteStream(event.stream);
+      };
+    }
+  }, [groupId, peerConnection, socket]);
 
-    return () => {
-      subcribe();
-      subcribeDelete();
-    };
-  }, [hangUp]);
-
-  if (gettingCall) {
-    return <GettingCall hangUp={hangUp} join={join} />;
+  if (isGettingCall) {
+    return <GettingCall hangUp={() => {}} join={joinCall} />;
   }
   if (localStream) {
-    return <Video hangUp={hangUp} localStream={localStream} remoteStream={remoteStream} />;
+    return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;
   }
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={create}>
-        <Icon name="video" style={styles.joinPhone} size={32} color={palette.white} />
-      </TouchableOpacity>
-    </View>
-  );
+
+  return <></>;
 };

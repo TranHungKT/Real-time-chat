@@ -1,12 +1,14 @@
 import { isEmpty } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
+import { RTCPeerConnection } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
 
 import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { usePeerConnection } from '@Hooks/usePeerConnection';
 import { useSocket } from '@Hooks/useSocket';
 import { DrawerContentContainer } from '@Screens/Chat/containers/DrawerContentContainer';
 import {
@@ -16,6 +18,7 @@ import {
   SplashScreen,
   GroupChatInformationScreen,
   GettingCallScreen,
+  CallingScreen,
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -23,6 +26,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { initPeerConnection, PeerConnectionContext } from '../providers/CallVideoProvider';
 import { WebSocketContext, initSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
@@ -42,6 +46,8 @@ export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
   ChatScreen: undefined;
   GroupChatInformationScreen: undefined;
+  CallingScreen: undefined;
+  GettingCallScreen: undefined;
 };
 
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
@@ -52,6 +58,7 @@ const AllGroupChat = () => {
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
   const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
+  const peerConnection = useRef<RTCPeerConnection | null>(null);
 
   useEffect(() => {
     if (socket) {
@@ -63,21 +70,32 @@ const AllGroupChat = () => {
         setCurrentSocket(undefined);
       });
     }
-  });
+  }, [socket]);
 
-  if (isEmpty(socket)) {
+  useEffect(() => {
+    const createPeerConnection = async () => {
+      peerConnection.current = await initPeerConnection();
+    };
+    createPeerConnection();
+  }, []);
+
+  if (isEmpty(socket) || !peerConnection.current) {
     return <LoadingComponent />;
   }
 
   return (
     <WebSocketContext.Provider value={socket}>
-      <AllGroupChatContainer />
+      <PeerConnectionContext.Provider value={peerConnection.current}>
+        <AllGroupChatContainer />
+      </PeerConnectionContext.Provider>
     </WebSocketContext.Provider>
   );
 };
 
 const AllGroupChatContainer = () => {
   useSocket();
+  usePeerConnection();
+
   return (
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
@@ -86,6 +104,8 @@ const AllGroupChatContainer = () => {
         name="GroupChatInformationScreen"
         component={GroupChatInformationScreen}
       />
+      <AllGroupChatStack.Screen name="CallingScreen" component={CallingScreen} />
+      <AllGroupChatStack.Screen name="GettingCallScreen" component={GettingCallScreen} />
     </AllGroupChatStack.Navigator>
   );
 };
@@ -141,7 +161,6 @@ export type NavigatorParamList = {
   LoginScreen: undefined;
   MainTobTab: undefined;
   SplashSreen: undefined;
-  GettingCallScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -157,7 +176,6 @@ const AppStack = () => {
       <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
-      <Stack.Screen name="GettingCallScreen" component={GettingCallScreen} />
     </Stack.Navigator>
   );
 };

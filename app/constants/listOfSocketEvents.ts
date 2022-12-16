@@ -10,6 +10,9 @@ export const SOCKET_EVENTS = {
   UN_TYPING: 'un-typing',
   CONNECT: 'connect',
   DISCONNECT: 'disconnect',
+  OFFER_FOR_CALL_EVENT: 'offer-for-call-event',
+  ANSWER_FOR_CALL_EVENT: 'answer-for-call-event',
+  ICE_CANDIDATE_EVENT: 'ice-candidate-event',
 };
 
 export const SOCKET_ERROR_TYPE = {

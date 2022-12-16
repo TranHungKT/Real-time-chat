@@ -3,6 +3,7 @@ import createDebugger from 'redux-flipper';
 
 import { configureStore, StateFromReducersMapObject } from '@reduxjs/toolkit';
 
+import { callVideoReducer } from './callVideo';
 import { groupsReducer } from './groups';
 import { messagesReducer } from './messages';
 import { userReducer } from './user';
@@ -11,6 +12,7 @@ export const reducer = {
   user: userReducer,
   groups: groupsReducer,
   messages: messagesReducer,
+  callVideo: callVideoReducer,
 };
 
 export type RootState = StateFromReducersMapObject<typeof reducer>;

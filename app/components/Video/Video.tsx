@@ -22,12 +22,8 @@ export const Video = (props: VideoProps) => {
   if (localStream && remoteStream) {
     return (
       <View style={styles.container}>
-        <RTCView streamURL={remoteStream?.toURL() || ''} objectFit={'cover'} style={styles.video} />
-        <RTCView
-          streamURL={localStream?.toURL() || ''}
-          objectFit={'cover'}
-          style={styles.videoLocal}
-        />
+        <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
+        <RTCView streamURL={localStream.toURL()} objectFit={'cover'} style={styles.videoLocal} />
       </View>
     );
   }
