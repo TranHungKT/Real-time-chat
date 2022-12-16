@@ -7,10 +7,10 @@ import {
   RTCSessionDescription,
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
-import GetStreams from 'utils/getStreams';
 
 import { Video } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { useMediaStream } from '@Hooks/useMediaStream';
 import { WebSocketContext } from '@Providers/index';
 import { currentGroupSelector } from '@Stores/groups';
 
@@ -22,17 +22,7 @@ export const CallingScreen = () => {
   const currentGroup = useSelector(currentGroupSelector);
 
   const peerConnection = useContext(PeerConnectionContext);
-
-  const getMediaStream = async () => {
-    const stream: MediaStream | null = await GetStreams.getStream();
-
-    if (peerConnection && stream) {
-      setLocalStream(stream);
-      peerConnection.addStream(stream);
-      return stream;
-    }
-    return null;
-  };
+  const getMediaStream = useMediaStream();
 
   const sendOfferToUser = async (offer: RTCSessionDescription) => {
     socket.emit(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, {
@@ -51,7 +41,11 @@ export const CallingScreen = () => {
   };
 
   const createCall = async () => {
-    await getMediaStream();
+    const stream = await getMediaStream(peerConnection);
+
+    if (stream) {
+      setLocalStream(stream);
+    }
 
     await createOfferForCalling();
   };
@@ -74,6 +68,7 @@ export const CallingScreen = () => {
 
   useEffect(() => {
     createCall();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (localStream) {

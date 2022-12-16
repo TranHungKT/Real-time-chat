@@ -8,10 +8,10 @@ import {
   RTCSessionDescriptionType,
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
-import GetStreams from 'utils/getStreams';
 
 import { Video } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { useMediaStream } from '@Hooks/useMediaStream';
 import { WebSocketContext } from '@Providers/index';
 import { getGroupIdSelector, getNewOfferSelector } from '@Stores/callVideo';
 
@@ -27,16 +27,7 @@ export const GettingCallScreen = () => {
   const groupId = useSelector(getGroupIdSelector);
   const peerConnection = useContext(PeerConnectionContext);
 
-  const getMediaStream = async () => {
-    const stream: MediaStream | null = await GetStreams.getStream();
-
-    if (peerConnection && stream) {
-      setLocalStream(stream);
-      peerConnection.addStream(stream);
-      return stream;
-    }
-    return null;
-  };
+  const getMediaStream = useMediaStream();
 
   const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
     const description = new RTCSessionDescription(newDescription);
@@ -65,7 +56,10 @@ export const GettingCallScreen = () => {
   const joinCall = async () => {
     try {
       if (newOffer) {
-        await getMediaStream();
+        const stream = await getMediaStream(peerConnection);
+        if (stream) {
+          setLocalStream(stream);
+        }
 
         await handleRemoteDescription(newOffer);
         const answerDescription = await handleCreateAnswerDescription();
