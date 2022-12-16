@@ -17,8 +17,8 @@ import {
   ChatScreen,
   SplashScreen,
   GroupChatInformationScreen,
-  GettingCallScreen2,
-  GettingCallScreen3,
+  GettingCallScreen,
+  CallingScreen,
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -46,8 +46,8 @@ export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
   ChatScreen: undefined;
   GroupChatInformationScreen: undefined;
+  CallingScreen: undefined;
   GettingCallScreen: undefined;
-  TestingScreen: undefined;
 };
 
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
@@ -104,8 +104,8 @@ const AllGroupChatContainer = () => {
         name="GroupChatInformationScreen"
         component={GroupChatInformationScreen}
       />
-      <AllGroupChatStack.Screen name="GettingCallScreen" component={GettingCallScreen2} />
-      <AllGroupChatStack.Screen name="TestingScreen" component={GettingCallScreen3} />
+      <AllGroupChatStack.Screen name="CallingScreen" component={CallingScreen} />
+      <AllGroupChatStack.Screen name="GettingCallScreen" component={GettingCallScreen} />
     </AllGroupChatStack.Navigator>
   );
 };

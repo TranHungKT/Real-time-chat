@@ -10,14 +10,14 @@ import {
 import { useSelector } from 'react-redux';
 import GetStreams from 'utils/getStreams';
 
+import { Video } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
 import { getGroupIdSelector, getNewOfferSelector } from '@Stores/callVideo';
 
 import { GettingCall } from './components/GettingCall/GettingCall';
-import { Video } from './components/Video/Video';
 
-export const GettingCallScreen3 = () => {
+export const GettingCallScreen = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);

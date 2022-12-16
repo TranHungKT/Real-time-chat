@@ -70,7 +70,7 @@ export const usePeerConnection = () => {
     socket.on(
       SOCKET_EVENTS.OFFER_FOR_CALL_EVENT,
       (payload: { offer: RTCSessionDescription; groupId: string }) => {
-        navigation.navigate('TestingScreen');
+        navigation.navigate('GettingCallScreen');
 
         dispatch(
           callVideoActions.setNewOfferAndGroupId({

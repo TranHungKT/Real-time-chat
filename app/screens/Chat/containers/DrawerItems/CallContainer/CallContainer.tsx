@@ -1,5 +1,5 @@
 import { PhoneSvg } from '@Constants/index';
-import { NavigatorParamList } from '@Navigators/index';
+import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { DrawerItem } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -7,9 +7,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DrawerText, DrawerIcon } from '../../../components/DrawerComponents';
 
 export const CallContainer = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'MainTobTab'>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'ChatScreen'>>();
 
-  const handleCall = () => navigation.navigate('GettingCallScreen');
+  const handleCall = () => navigation.navigate('CallingScreen');
 
   return (
     <DrawerItem

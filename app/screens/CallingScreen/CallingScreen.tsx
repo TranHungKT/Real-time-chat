@@ -1,7 +1,5 @@
 import { PeerConnectionContext } from 'providers/CallVideoProvider';
 import { useState, useEffect, useContext } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   EventOnAddStream,
   EventOnCandidate,
@@ -9,21 +7,17 @@ import {
   RTCSessionDescription,
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
-import { palette } from 'themes';
 import GetStreams from 'utils/getStreams';
 
+import { Video } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
 import { currentGroupSelector } from '@Stores/groups';
 
-import { styles } from './GettingCallScreenStyles';
-import { Video } from './components/Video/Video';
-
-export const GettingCallScreen2 = () => {
+export const CallingScreen = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [gettingCall, setGettingCall] = useState(false);
 
   const currentGroup = useSelector(currentGroupSelector);
 
@@ -76,20 +70,15 @@ export const GettingCallScreen2 = () => {
         setRemoteStream(event.stream);
       };
     }
-  }, [currentGroup?._id, peerConnection, socket, gettingCall]);
+  }, [currentGroup?._id, peerConnection, socket]);
 
   useEffect(() => {
-    setGettingCall(true);
+    createCall();
   }, []);
+
   if (localStream) {
     return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;
   }
 
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={createCall}>
-        <Icon name="video" style={styles.joinPhone} size={32} color={palette.white} />
-      </TouchableOpacity>
-    </View>
-  );
+  return <></>;
 };
