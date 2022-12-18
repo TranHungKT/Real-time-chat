@@ -18,6 +18,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { useRemoteDescription } from './useRemoteDescription';
 
+export interface OfferPayload {
+  offer: RTCSessionDescription;
+  groupId: string;
+  callerId: string;
+}
+
 export const usePeerConnection = () => {
   const peerConnection = useContext(PeerConnectionContext);
   const socket = useContext(WebSocketContext);
@@ -73,19 +79,17 @@ export const usePeerConnection = () => {
       }
     });
 
-    socket.on(
-      SOCKET_EVENTS.OFFER_FOR_CALL_EVENT,
-      (payload: { offer: RTCSessionDescription; groupId: string }) => {
-        navigation.navigate('GettingCallScreen');
-
-        dispatch(
-          callVideoActions.setNewOfferAndGroupId({
-            offer: payload.offer,
-            groupId: payload.groupId,
-          }),
-        );
-      },
-    );
+    socket.on(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, (payload: OfferPayload) => {
+      navigation.navigate('GettingCallScreen');
+      const { offer, callerId } = payload;
+      dispatch(
+        callVideoActions.setNewOfferAndGroupId({
+          offer: offer,
+          groupId: payload.groupId,
+          callerId: callerId,
+        }),
+      );
+    });
   }, [dispatch, handleAddNewIceCandidate, handleRemoteDescription, navigation, socket]);
 
   useEffect(() => {

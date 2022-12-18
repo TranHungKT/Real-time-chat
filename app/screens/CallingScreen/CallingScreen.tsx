@@ -12,12 +12,13 @@ import { SOCKET_EVENTS } from '@Constants/index';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { WebSocketContext, PeerConnectionContext } from '@Providers/index';
 import { currentGroupSelector } from '@Stores/groups';
+import { userIdSelector } from '@Stores/user';
 
 export const CallingScreen = () => {
   const socket = useContext(WebSocketContext);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-
+  const userId = useSelector(userIdSelector);
   const currentGroup = useSelector(currentGroupSelector);
 
   const peerConnection = useContext(PeerConnectionContext);
@@ -27,6 +28,7 @@ export const CallingScreen = () => {
     socket.emit(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, {
       groupId: currentGroup?._id,
       offer: offer,
+      callerId: userId,
     });
   };
 
