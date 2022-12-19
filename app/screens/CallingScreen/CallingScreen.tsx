@@ -7,8 +7,9 @@ import {
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 
-import { Video, LoadingComponent } from '@Components/index';
+import { LoadingComponent } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { VideoCallContainer } from '@Containers/index';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { WebSocketContext, PeerConnectionContext } from '@Providers/index';
 import { currentGroupSelector } from '@Stores/groups';
@@ -51,6 +52,17 @@ export const CallingScreen = () => {
     await createOfferForCalling();
   };
 
+  const handleResetStream = () => {
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+
+  const handleEmitHangUpEvent = () => {
+    socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
+      groupId: currentGroup?._id,
+    });
+  };
+
   useEffect(() => {
     if (peerConnection) {
       peerConnection.onicecandidate = (event: EventOnCandidate) => {
@@ -73,7 +85,15 @@ export const CallingScreen = () => {
   }, []);
 
   if (localStream) {
-    return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;
+    return (
+      <VideoCallContainer
+        onHandleResetStream={handleResetStream}
+        onHandleEmitHangUpEvent={handleEmitHangUpEvent}
+        localStream={localStream}
+        remoteStream={remoteStream}
+        peerConnection={peerConnection}
+      />
+    );
   }
 
   return <LoadingComponent />;

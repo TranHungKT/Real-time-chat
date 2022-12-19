@@ -13,6 +13,7 @@ export const SOCKET_EVENTS = {
   OFFER_FOR_CALL_EVENT: 'offer-for-call-event',
   ANSWER_FOR_CALL_EVENT: 'answer-for-call-event',
   ICE_CANDIDATE_EVENT: 'ice-candidate-event',
+  HANG_UP_EVENT: 'hang-up-event',
 };
 
 export const SOCKET_ERROR_TYPE = {

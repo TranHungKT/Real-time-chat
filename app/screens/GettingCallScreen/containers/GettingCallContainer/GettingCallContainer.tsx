@@ -10,7 +10,7 @@ import {
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 
-import { Video } from '@Components/index';
+import { VideoCallContainer } from '@Containers/index';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { useRemoteDescription } from '@Hooks/useRemoteDescription';
 import { getNewOfferSelector } from '@Stores/callVideo';
@@ -20,10 +20,11 @@ import { GettingCall } from '../../components/GettingCall/GettingCall';
 interface GettingCallContainerProps {
   onHandleEmitAnswerEvent: (answerDescription?: RTCSessionDescription) => void;
   onHandleEmitIceCandidate: (iceCandidate: RTCIceCandidateType) => void;
+  onHandleEmitHangUpEvent: () => void;
 }
 
 export const GettingCallContainer = (props: GettingCallContainerProps) => {
-  const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
+  const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate, onHandleEmitHangUpEvent } = props;
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isGettingCall, setIsGettingCall] = useState(true);
@@ -76,6 +77,32 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     }
   };
 
+  const streamCleanUp = () => {
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+      localStream.release();
+    }
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+
+  const closePeerConnection = () => {
+    if (peerConnection) {
+      peerConnection.close();
+    }
+  };
+
+  const hangUp = () => {
+    onHandleEmitHangUpEvent();
+    streamCleanUp();
+    closePeerConnection();
+  };
+
+  const handleResetStream = () => {
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+
   useEffect(() => {
     if (peerConnection) {
       peerConnection.onicecandidate = (event: EventOnCandidate) => {
@@ -90,10 +117,18 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   }, [groupId, onHandleEmitIceCandidate, peerConnection]);
 
   if (isGettingCall) {
-    return <GettingCall hangUp={() => {}} join={joinCall} />;
+    return <GettingCall hangUp={hangUp} join={joinCall} />;
   }
   if (localStream) {
-    return <Video hangUp={() => {}} localStream={localStream} remoteStream={remoteStream} />;
+    return (
+      <VideoCallContainer
+        onHandleResetStream={handleResetStream}
+        onHandleEmitHangUpEvent={onHandleEmitHangUpEvent}
+        localStream={localStream}
+        remoteStream={remoteStream}
+        peerConnection={peerConnection}
+      />
+    );
   }
 
   return <></>;

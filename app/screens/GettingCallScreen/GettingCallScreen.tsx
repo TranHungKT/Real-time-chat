@@ -27,10 +27,17 @@ export const GettingCallScreen = () => {
     });
   };
 
+  const handleEmitHangUpEvent = () => {
+    socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
+      groupId: groupId,
+    });
+  };
+
   return (
     <GettingCallContainer
       onHandleEmitAnswerEvent={handleEmitAnswerEvent}
       onHandleEmitIceCandidate={handleEmitIceCandidate}
+      onHandleEmitHangUpEvent={handleEmitHangUpEvent}
     />
   );
 };
