@@ -14,6 +14,14 @@ export const callVideoSlice = createSlice({
       state.groupId = action.payload.groupId;
       state.callerId = action.payload.callerId;
     },
+    setGroupId(state, action: PayloadAction<{ groupId: string }>) {
+      state.groupId = action.payload.groupId;
+    },
+    resetCall(state) {
+      state.callerId = undefined;
+      state.groupId = undefined;
+      state.offer = undefined;
+    },
   },
 });
 

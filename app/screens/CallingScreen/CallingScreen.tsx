@@ -57,12 +57,6 @@ export const CallingScreen = () => {
     setRemoteStream(null);
   };
 
-  const handleEmitHangUpEvent = () => {
-    socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
-      groupId: currentGroup?._id,
-    });
-  };
-
   useEffect(() => {
     if (peerConnection) {
       peerConnection.onicecandidate = (event: EventOnCandidate) => {
@@ -88,10 +82,8 @@ export const CallingScreen = () => {
     return (
       <VideoCallContainer
         onHandleResetStream={handleResetStream}
-        onHandleEmitHangUpEvent={handleEmitHangUpEvent}
         localStream={localStream}
         remoteStream={remoteStream}
-        peerConnection={peerConnection}
       />
     );
   }

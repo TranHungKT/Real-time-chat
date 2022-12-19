@@ -20,11 +20,10 @@ import { GettingCall } from '../../components/GettingCall/GettingCall';
 interface GettingCallContainerProps {
   onHandleEmitAnswerEvent: (answerDescription?: RTCSessionDescription) => void;
   onHandleEmitIceCandidate: (iceCandidate: RTCIceCandidateType) => void;
-  onHandleEmitHangUpEvent: () => void;
 }
 
 export const GettingCallContainer = (props: GettingCallContainerProps) => {
-  const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate, onHandleEmitHangUpEvent } = props;
+  const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [isGettingCall, setIsGettingCall] = useState(true);
@@ -93,7 +92,6 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   };
 
   const hangUp = () => {
-    onHandleEmitHangUpEvent();
     streamCleanUp();
     closePeerConnection();
   };
@@ -123,10 +121,8 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     return (
       <VideoCallContainer
         onHandleResetStream={handleResetStream}
-        onHandleEmitHangUpEvent={onHandleEmitHangUpEvent}
         localStream={localStream}
         remoteStream={remoteStream}
-        peerConnection={peerConnection}
       />
     );
   }

@@ -1,32 +1,32 @@
 import { useCallback, useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { MediaStream, RTCView, RTCPeerConnection } from 'react-native-webrtc';
+import { MediaStream, RTCView } from 'react-native-webrtc';
+import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
+import { callVideoActions, getGroupIdOfCallSelector } from '@Stores/callVideo';
+import { useAppDispatch } from '@Stores/index';
 import { useNavigation } from '@react-navigation/native';
 
 import { styles } from './VideoCallContainerStyles';
 
 interface VideoProps {
   onHandleResetStream: () => void;
-  onHandleEmitHangUpEvent: () => void;
+
   localStream?: MediaStream | null;
   remoteStream?: MediaStream | null;
-  peerConnection?: RTCPeerConnection;
 }
 
 export const VideoCallContainer = (props: VideoProps) => {
-  const {
-    localStream,
-    remoteStream,
-    peerConnection,
-    onHandleResetStream,
-    onHandleEmitHangUpEvent,
-  } = props;
+  const { localStream, remoteStream, onHandleResetStream } = props;
   const socket = useContext(WebSocketContext);
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+
+  const groupId = useSelector(getGroupIdOfCallSelector);
+
   const streamCleanUp = useCallback(() => {
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
@@ -35,30 +35,34 @@ export const VideoCallContainer = (props: VideoProps) => {
     onHandleResetStream();
   }, [localStream, onHandleResetStream]);
 
-  const closePeerConnection = useCallback(() => {
-    if (peerConnection) {
-      peerConnection.close();
-    }
-  }, [peerConnection]);
-
-  const hangUp = () => {
-    onHandleEmitHangUpEvent();
-    streamCleanUp();
-    closePeerConnection();
-    navigateBack();
+  const handleEmitHangUpEvent = () => {
+    socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
+      groupId: groupId,
+    });
   };
 
   const navigateBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
 
+  const cleanUpTheCall = useCallback(() => {
+    streamCleanUp();
+
+    dispatch(callVideoActions.resetCall());
+
+    navigateBack();
+  }, [dispatch, navigateBack, streamCleanUp]);
+
+  const hangUp = () => {
+    handleEmitHangUpEvent();
+    cleanUpTheCall();
+  };
+
   useEffect(() => {
     socket.on(SOCKET_EVENTS.HANG_UP_EVENT, () => {
-      streamCleanUp();
-      closePeerConnection();
-      navigateBack();
+      cleanUpTheCall();
     });
-  }, [closePeerConnection, navigateBack, socket, streamCleanUp]);
+  }, [cleanUpTheCall, navigateBack, socket, streamCleanUp]);
 
   if (localStream && !remoteStream) {
     return (
