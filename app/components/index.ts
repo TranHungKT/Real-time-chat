@@ -3,4 +3,5 @@ export { TabBarButton } from './TabBarButton';
 export { EmptyOrErrorContent } from './EmptyOrErrorContent';
 export { SnackBarError } from './SnackBarError';
 export { LoadingComponent } from './LoadingComponent';
-export { Video } from './Video/Video';
+export { VideoCallActionButtons } from './VideoCallActionButtons/VideoCallActionButtons';
+export { ModalVideoCall } from './ModalVideoCall/ModalVideoCall';

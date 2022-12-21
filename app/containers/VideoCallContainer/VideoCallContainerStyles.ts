@@ -1,9 +1,12 @@
 import { StyleSheet, ViewStyle } from 'react-native';
 
+import { palette } from '@Themes/index';
+
 interface Styles {
   container: ViewStyle;
   video: ViewStyle;
   videoLocal: ViewStyle;
+  closeButton: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -26,5 +29,10 @@ export const styles = StyleSheet.create<Styles>({
     top: 0,
     left: 20,
     elevation: 10,
+  },
+
+  closeButton: {
+    backgroundColor: palette.red,
+    marginBottom: 50,
   },
 });
