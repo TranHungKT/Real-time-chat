@@ -2,13 +2,10 @@ import { useCallback, useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MediaStream, RTCView } from 'react-native-webrtc';
-import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { WebSocketContext } from '@Providers/index';
-import { callVideoActions, getGroupIdOfCallSelector } from '@Stores/callVideo';
-import { useAppDispatch } from '@Stores/index';
-import { useNavigation } from '@react-navigation/native';
 
 import { styles } from './VideoCallContainerStyles';
 
@@ -21,11 +18,10 @@ interface VideoProps {
 
 export const VideoCallContainer = (props: VideoProps) => {
   const { localStream, remoteStream, onHandleResetStream } = props;
-  const socket = useContext(WebSocketContext);
-  const navigation = useNavigation();
-  const dispatch = useAppDispatch();
 
-  const groupId = useSelector(getGroupIdOfCallSelector);
+  const socket = useContext(WebSocketContext);
+
+  const { onHangUpCall, onResetcall } = useHangingUpCall();
 
   const streamCleanUp = useCallback(() => {
     if (localStream) {
@@ -35,34 +31,21 @@ export const VideoCallContainer = (props: VideoProps) => {
     onHandleResetStream();
   }, [localStream, onHandleResetStream]);
 
-  const handleEmitHangUpEvent = () => {
-    socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
-      groupId: groupId,
-    });
-  };
-
-  const navigateBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
   const cleanUpTheCall = useCallback(() => {
     streamCleanUp();
-
-    dispatch(callVideoActions.resetCall());
-
-    navigateBack();
-  }, [dispatch, navigateBack, streamCleanUp]);
-
-  const hangUp = () => {
-    handleEmitHangUpEvent();
-    cleanUpTheCall();
-  };
+  }, [streamCleanUp]);
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.HANG_UP_EVENT, () => {
       cleanUpTheCall();
+      onResetcall();
     });
-  }, [cleanUpTheCall, navigateBack, socket, streamCleanUp]);
+  }, [cleanUpTheCall, onResetcall, socket]);
+
+  const handleHangUpCall = () => {
+    cleanUpTheCall();
+    onHangUpCall();
+  };
 
   if (localStream && !remoteStream) {
     return (
@@ -77,7 +60,7 @@ export const VideoCallContainer = (props: VideoProps) => {
       <View style={styles.container}>
         <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
         <RTCView streamURL={localStream.toURL()} objectFit={'cover'} style={styles.videoLocal} />
-        <Button onPress={hangUp}>Close</Button>
+        <Button onPress={handleHangUpCall}>Close</Button>
       </View>
     );
   }

@@ -1,9 +1,11 @@
 import { isEmpty } from 'lodash';
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
+import Modal from 'react-native-modal';
 import { RTCPeerConnection } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
+import { getNewOfferSelector } from 'stores/callVideo';
 
 import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
@@ -57,8 +59,27 @@ const AllGroupChat = () => {
 
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
+  const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
+  const [isVisibleCalling, setIsVisbleCalling] = useState(false);
+
   const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
+
+  const { isGettingCall, isCalling } = useSelector(getNewOfferSelector);
+
+  useEffect(() => {
+    if (isGettingCall) {
+      return setIsVisbleGettingCall(true);
+    }
+    return setIsVisbleGettingCall(false);
+  }, [isGettingCall]);
+
+  useEffect(() => {
+    if (isCalling) {
+      return setIsVisbleCalling(true);
+    }
+    return setIsVisbleCalling(false);
+  }, [isCalling]);
 
   useEffect(() => {
     if (socket) {
@@ -87,6 +108,12 @@ const AllGroupChat = () => {
     <WebSocketContext.Provider value={socket}>
       <PeerConnectionContext.Provider value={peerConnection.current}>
         <AllGroupChatContainer />
+        <Modal isVisible={isVisibleGettingCall}>
+          <GettingCallScreen />
+        </Modal>
+        <Modal isVisible={isVisibleCalling}>
+          <CallingScreen />
+        </Modal>
       </PeerConnectionContext.Provider>
     </WebSocketContext.Provider>
   );
@@ -104,8 +131,6 @@ const AllGroupChatContainer = () => {
         name="GroupChatInformationScreen"
         component={GroupChatInformationScreen}
       />
-      <AllGroupChatStack.Screen name="CallingScreen" component={CallingScreen} />
-      <AllGroupChatStack.Screen name="GettingCallScreen" component={GettingCallScreen} />
     </AllGroupChatStack.Navigator>
   );
 };

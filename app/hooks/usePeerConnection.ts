@@ -84,7 +84,6 @@ export const usePeerConnection = () => {
     );
 
     socket.on(SOCKET_EVENTS.OFFER_FOR_CALL_EVENT, (payload: OfferPayload) => {
-      navigation.navigate('GettingCallScreen');
       const { offer, callerId } = payload;
       dispatch(
         callVideoActions.setNewOfferAndGroupId({

@@ -11,6 +11,7 @@ import {
 import { useSelector } from 'react-redux';
 
 import { VideoCallContainer } from '@Containers/index';
+import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { useRemoteDescription } from '@Hooks/useRemoteDescription';
 import { getNewOfferSelector } from '@Stores/callVideo';
@@ -31,6 +32,8 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { offer: newOffer, groupId } = useSelector(getNewOfferSelector);
 
   const peerConnection = useContext(PeerConnectionContext);
+
+  const { onHangUpCall } = useHangingUpCall();
 
   const getMediaStream = useMediaStream();
   const onHandleRemoteDescription = useRemoteDescription();
@@ -76,29 +79,22 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     }
   };
 
+  const handleResetStream = () => {
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
+
   const streamCleanUp = () => {
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       localStream.release();
     }
-    setLocalStream(null);
-    setRemoteStream(null);
-  };
-
-  const closePeerConnection = () => {
-    if (peerConnection) {
-      peerConnection.close();
-    }
+    handleResetStream();
   };
 
   const hangUp = () => {
     streamCleanUp();
-    closePeerConnection();
-  };
-
-  const handleResetStream = () => {
-    setLocalStream(null);
-    setRemoteStream(null);
+    onHangUpCall();
   };
 
   useEffect(() => {
