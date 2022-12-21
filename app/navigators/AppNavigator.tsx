@@ -1,13 +1,12 @@
 import { isEmpty } from 'lodash';
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
-import Modal from 'react-native-modal';
 import { RTCPeerConnection } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
 import { getNewOfferSelector } from 'stores/callVideo';
 
-import { MainTabBar, LoadingComponent } from '@Components/index';
+import { MainTabBar, LoadingComponent, ModalVideoCall } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { usePeerConnection } from '@Hooks/usePeerConnection';
@@ -108,12 +107,12 @@ const AllGroupChat = () => {
     <WebSocketContext.Provider value={socket}>
       <PeerConnectionContext.Provider value={peerConnection.current}>
         <AllGroupChatContainer />
-        <Modal isVisible={isVisibleGettingCall}>
+        <ModalVideoCall isVisible={isVisibleGettingCall}>
           <GettingCallScreen />
-        </Modal>
-        <Modal isVisible={isVisibleCalling}>
+        </ModalVideoCall>
+        <ModalVideoCall isVisible={isVisibleCalling}>
           <CallingScreen />
-        </Modal>
+        </ModalVideoCall>
       </PeerConnectionContext.Provider>
     </WebSocketContext.Provider>
   );
