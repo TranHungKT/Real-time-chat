@@ -49,7 +49,7 @@ export const CallingScreen = () => {
       setLocalStream(stream);
     }
 
-    // await createOfferForCalling();
+    await createOfferForCalling();
   };
 
   const handleResetStream = () => {
