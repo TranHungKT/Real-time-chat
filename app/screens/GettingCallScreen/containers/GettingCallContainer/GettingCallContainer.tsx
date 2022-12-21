@@ -113,6 +113,7 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   if (isGettingCall) {
     return <GettingCall hangUp={hangUp} join={joinCall} />;
   }
+
   if (localStream) {
     return (
       <VideoCallContainer

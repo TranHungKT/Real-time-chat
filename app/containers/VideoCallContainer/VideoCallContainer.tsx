@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect } from 'react';
 import { View } from 'react-native';
-import { Button } from 'react-native-paper';
 import { MediaStream, RTCView } from 'react-native-webrtc';
 
+import { VideoCallActionButtons } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { WebSocketContext } from '@Providers/index';
@@ -51,6 +51,7 @@ export const VideoCallContainer = (props: VideoProps) => {
     return (
       <View style={styles.container}>
         <RTCView streamURL={localStream?.toURL() || ''} objectFit={'cover'} style={styles.video} />
+        <VideoCallActionButtons onHandleHangUpCall={handleHangUpCall} />
       </View>
     );
   }
@@ -60,7 +61,8 @@ export const VideoCallContainer = (props: VideoProps) => {
       <View style={styles.container}>
         <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
         <RTCView streamURL={localStream.toURL()} objectFit={'cover'} style={styles.videoLocal} />
-        <Button onPress={handleHangUpCall}>Close</Button>
+
+        <VideoCallActionButtons onHandleHangUpCall={handleHangUpCall} />
       </View>
     );
   }
