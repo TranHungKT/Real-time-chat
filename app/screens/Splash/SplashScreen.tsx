@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { EmptyOrErrorContent } from '@Components/index';
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
-import { fetchUserData } from '@Services/index';
+import { fetchCurrentUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userIdSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/index';
@@ -26,8 +26,8 @@ export const SplashScreen = () => {
   const userId = useSelector(userIdSelector);
 
   const { data, error } = useQuery(
-    ['getUserData', accessToken],
-    () => fetchUserData(accessToken as string),
+    ['getCurrentUserData', accessToken],
+    () => fetchCurrentUserData(accessToken as string),
     { enabled: accessToken ? true : false },
   );
 
