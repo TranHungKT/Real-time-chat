@@ -1,3 +1,4 @@
+import { ModalVideoCall } from 'components';
 import { PeerConnectionContext } from 'providers/CallVideoProvider';
 import { useState, useEffect, useContext } from 'react';
 import {
@@ -25,9 +26,9 @@ interface GettingCallContainerProps {
 export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
 
-  const [isGettingCall, setIsGettingCall] = useState(true);
+  const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
 
-  const { offer: newOffer, groupId } = useSelector(getNewOfferSelector);
+  const { offer: newOffer, groupId, isGettingCall } = useSelector(getNewOfferSelector);
   const dispatch = useAppDispatch();
   const peerConnection = useContext(PeerConnectionContext);
 
@@ -39,6 +40,12 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
     onHandleRemoteDescription({ newDescription, peerConnection });
   };
+  useEffect(() => {
+    if (isGettingCall) {
+      return setIsVisbleGettingCall(true);
+    }
+    return setIsVisbleGettingCall(false);
+  }, [isGettingCall]);
 
   const handleCreateAnswerDescription = async () => {
     if (peerConnection) {
@@ -69,8 +76,6 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
         await handleLocalStream();
         await handleRemoteDescription(newOffer);
         await handleSendAnswer();
-
-        setIsGettingCall(false);
       }
     } catch (error) {
       console.log('error to join call', error);
@@ -90,9 +95,9 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     }
   }, [dispatch, groupId, onHandleEmitIceCandidate, peerConnection]);
 
-  if (isGettingCall) {
-    return <GettingCall hangUp={onHangUpCall} join={joinCall} />;
-  }
-
-  return <></>;
+  return (
+    <ModalVideoCall isVisible={isVisibleGettingCall}>
+      <GettingCall hangUp={onHangUpCall} join={joinCall} />
+    </ModalVideoCall>
+  );
 };

@@ -58,20 +58,12 @@ const AllGroupChat = () => {
 
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
-  const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
   const [isVisibleCalling, setIsVisbleCalling] = useState(false);
 
   const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
 
-  const { isGettingCall, localStream } = useSelector(getNewOfferSelector);
-
-  useEffect(() => {
-    if (isGettingCall) {
-      return setIsVisbleGettingCall(true);
-    }
-    return setIsVisbleGettingCall(false);
-  }, [isGettingCall]);
+  const { localStream } = useSelector(getNewOfferSelector);
 
   useEffect(() => {
     if (localStream) {
@@ -107,9 +99,9 @@ const AllGroupChat = () => {
     <WebSocketContext.Provider value={socket}>
       <PeerConnectionContext.Provider value={peerConnection.current}>
         <AllGroupChatContainer />
-        <ModalVideoCall isVisible={isVisibleGettingCall}>
-          <GettingCallScreen />
-        </ModalVideoCall>
+
+        <GettingCallScreen />
+
         <ModalVideoCall isVisible={isVisibleCalling}>
           <VideoCallContainer />
         </ModalVideoCall>
