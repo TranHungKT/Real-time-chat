@@ -11,11 +11,16 @@ import { useSelector } from 'react-redux';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext, PeerConnectionContext } from '@Providers/index';
-import { callVideoActions, getGroupIdOfCallSelector } from '@Stores/callVideo';
+import {
+  callVideoActions,
+  getGroupIdOfCallSelector,
+  getLocalStreamSelector,
+} from '@Stores/callVideo';
 import { useAppDispatch } from '@Stores/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { useHangingUpCall } from './useHangingUpCall';
 import { useRemoteDescription } from './useRemoteDescription';
 
 export interface OfferPayload {
@@ -34,14 +39,24 @@ export const usePeerConnection = () => {
   const dispatch = useAppDispatch();
 
   const groupId = useSelector(getGroupIdOfCallSelector);
+  const localStream = useSelector(getLocalStreamSelector);
 
   const onHandleRemoteDescription = useRemoteDescription();
+  const { onResetCall } = useHangingUpCall();
+
   const handleRemoteDescription = useCallback(
     async (newDescription: RTCSessionDescriptionType) => {
       onHandleRemoteDescription({ newDescription, peerConnection });
     },
     [onHandleRemoteDescription, peerConnection],
   );
+
+  const streamCleanUp = useCallback(() => {
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+      localStream.release();
+    }
+  }, [localStream]);
 
   const handleAddNewIceCandidate = useCallback(
     async (remoteIceCandidate: RTCIceCandidateType) => {
@@ -107,6 +122,13 @@ export const usePeerConnection = () => {
       };
     }
   }, [groupId, peerConnection, socket]);
+
+  useEffect(() => {
+    socket.on(SOCKET_EVENTS.HANG_UP_EVENT, () => {
+      onResetCall();
+      streamCleanUp();
+    });
+  }, [onResetCall, socket, streamCleanUp]);
 
   return peerConnection;
 };
