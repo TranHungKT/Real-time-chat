@@ -17,10 +17,6 @@ export const useHangingUpCall = () => {
     dispatch(callVideoActions.resetCall());
   }, [dispatch]);
 
-  const handleResetCall = () => {
-    cleanUpTheCall();
-  };
-
   const handleEmitHangUpEvent = () => {
     socket.emit(SOCKET_EVENTS.HANG_UP_EVENT, {
       groupId: groupId,
@@ -29,11 +25,11 @@ export const useHangingUpCall = () => {
 
   const hangUpCall = () => {
     handleEmitHangUpEvent();
-    handleResetCall();
+    cleanUpTheCall();
   };
 
   return {
     onHangUpCall: hangUpCall,
-    onResetcall: handleResetCall,
+    onResetCall: cleanUpTheCall,
   };
 };

@@ -9,6 +9,7 @@ import { getNewOfferSelector } from 'stores/callVideo';
 import { MainTabBar, LoadingComponent, ModalVideoCall } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
+import { VideoCallContainer } from '@Containers/index';
 import { usePeerConnection } from '@Hooks/usePeerConnection';
 import { useSocket } from '@Hooks/useSocket';
 import { DrawerContentContainer } from '@Screens/Chat/containers/DrawerContentContainer';
@@ -19,7 +20,6 @@ import {
   SplashScreen,
   GroupChatInformationScreen,
   GettingCallScreen,
-  CallingScreen,
 } from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -64,7 +64,7 @@ const AllGroupChat = () => {
   const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
 
-  const { isGettingCall, isCalling } = useSelector(getNewOfferSelector);
+  const { isGettingCall, localStream } = useSelector(getNewOfferSelector);
 
   useEffect(() => {
     if (isGettingCall) {
@@ -74,11 +74,11 @@ const AllGroupChat = () => {
   }, [isGettingCall]);
 
   useEffect(() => {
-    if (isCalling) {
+    if (localStream) {
       return setIsVisbleCalling(true);
     }
     return setIsVisbleCalling(false);
-  }, [isCalling]);
+  }, [localStream]);
 
   useEffect(() => {
     if (socket) {
@@ -111,7 +111,7 @@ const AllGroupChat = () => {
           <GettingCallScreen />
         </ModalVideoCall>
         <ModalVideoCall isVisible={isVisibleCalling}>
-          <CallingScreen />
+          <VideoCallContainer />
         </ModalVideoCall>
       </PeerConnectionContext.Provider>
     </WebSocketContext.Provider>

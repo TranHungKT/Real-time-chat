@@ -3,18 +3,17 @@ import { useState, useEffect, useContext } from 'react';
 import {
   EventOnAddStream,
   EventOnCandidate,
-  MediaStream,
   RTCSessionDescription,
   RTCSessionDescriptionType,
   RTCIceCandidateType,
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 
-import { VideoCallContainer } from '@Containers/index';
 import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { useRemoteDescription } from '@Hooks/useRemoteDescription';
-import { getNewOfferSelector } from '@Stores/callVideo';
+import { callVideoActions, getNewOfferSelector } from '@Stores/callVideo';
+import { useAppDispatch } from '@Stores/index';
 
 import { GettingCall } from '../../components/GettingCall/GettingCall';
 
@@ -25,12 +24,11 @@ interface GettingCallContainerProps {
 
 export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+
   const [isGettingCall, setIsGettingCall] = useState(true);
 
   const { offer: newOffer, groupId } = useSelector(getNewOfferSelector);
-
+  const dispatch = useAppDispatch();
   const peerConnection = useContext(PeerConnectionContext);
 
   const { onHangUpCall } = useHangingUpCall();
@@ -55,7 +53,7 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const handleLocalStream = async () => {
     const stream = await getMediaStream(peerConnection);
     if (stream) {
-      setLocalStream(stream);
+      dispatch(callVideoActions.setLocalStream(stream));
     }
   };
 
@@ -79,24 +77,6 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     }
   };
 
-  const handleResetStream = () => {
-    setLocalStream(null);
-    setRemoteStream(null);
-  };
-
-  const streamCleanUp = () => {
-    if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-      localStream.release();
-    }
-    handleResetStream();
-  };
-
-  const hangUp = () => {
-    streamCleanUp();
-    onHangUpCall();
-  };
-
   useEffect(() => {
     if (peerConnection) {
       peerConnection.onicecandidate = (event: EventOnCandidate) => {
@@ -105,23 +85,13 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
         }
       };
       peerConnection.onaddstream = (event: EventOnAddStream) => {
-        setRemoteStream(event.stream);
+        dispatch(callVideoActions.setRemoteStream(event.stream));
       };
     }
-  }, [groupId, onHandleEmitIceCandidate, peerConnection]);
+  }, [dispatch, groupId, onHandleEmitIceCandidate, peerConnection]);
 
   if (isGettingCall) {
-    return <GettingCall hangUp={hangUp} join={joinCall} />;
-  }
-
-  if (localStream) {
-    return (
-      <VideoCallContainer
-        onHandleResetStream={handleResetStream}
-        localStream={localStream}
-        remoteStream={remoteStream}
-      />
-    );
+    return <GettingCall hangUp={onHangUpCall} join={joinCall} />;
   }
 
   return <></>;

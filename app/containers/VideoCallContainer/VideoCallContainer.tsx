@@ -1,50 +1,41 @@
 import { useCallback, useContext, useEffect } from 'react';
 import { View } from 'react-native';
-import { MediaStream, RTCView } from 'react-native-webrtc';
+import { RTCView } from 'react-native-webrtc';
+import { useSelector } from 'react-redux';
 
 import { VideoCallActionButtons } from '@Components/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { WebSocketContext } from '@Providers/index';
+import { getLocalStreamSelector, getRemoteStreamSelector } from '@Stores/callVideo';
 
 import { styles } from './VideoCallContainerStyles';
 
-interface VideoProps {
-  onHandleResetStream: () => void;
-
-  localStream?: MediaStream | null;
-  remoteStream?: MediaStream | null;
-}
-
-export const VideoCallContainer = (props: VideoProps) => {
-  const { localStream, remoteStream, onHandleResetStream } = props;
+export const VideoCallContainer = () => {
+  const localStream = useSelector(getLocalStreamSelector);
+  const remoteStream = useSelector(getRemoteStreamSelector);
 
   const socket = useContext(WebSocketContext);
 
-  const { onHangUpCall, onResetcall } = useHangingUpCall();
+  const { onHangUpCall, onResetCall } = useHangingUpCall();
 
   const streamCleanUp = useCallback(() => {
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       localStream.release();
     }
-    onHandleResetStream();
-  }, [localStream, onHandleResetStream]);
-
-  const cleanUpTheCall = useCallback(() => {
-    streamCleanUp();
-  }, [streamCleanUp]);
+  }, [localStream]);
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.HANG_UP_EVENT, () => {
-      cleanUpTheCall();
-      onResetcall();
+      onResetCall();
+      streamCleanUp();
     });
-  }, [cleanUpTheCall, onResetcall, socket]);
+  }, [onResetCall, socket, streamCleanUp]);
 
   const handleHangUpCall = () => {
-    cleanUpTheCall();
     onHangUpCall();
+    streamCleanUp();
   };
 
   if (localStream && !remoteStream) {
