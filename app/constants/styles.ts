@@ -1,4 +1,4 @@
-import { StyleSheet, ViewStyle, StatusBar, Platform } from 'react-native';
+import { StyleSheet, ViewStyle, StatusBar, Platform, Dimensions } from 'react-native';
 
 import { palette } from '@Themes/index';
 
@@ -13,3 +13,6 @@ export const COMMON_STYLES = StyleSheet.create<Styles>({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
 });
+
+export const deviceWidth = Dimensions.get('window').width;
+export const deviceHeight = Dimensions.get('window').height;

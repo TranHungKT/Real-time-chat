@@ -1,4 +1,5 @@
-import { View, Text, Image } from 'react-native';
+import { useState } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { palette } from 'themes';
@@ -13,11 +14,12 @@ import { styles } from './GettingCallInformationContainerStyles';
 interface GettingCallInformationContainerProps {
   hangUp: () => void;
   joinCall: () => void;
+  onPressModal: () => void;
+  isExpandingModal: boolean;
 }
 
 export const GettingCallInformationContainer = (props: GettingCallInformationContainerProps) => {
-  const { hangUp, joinCall } = props;
-
+  const { hangUp, joinCall, onPressModal, isExpandingModal } = props;
   const callerId = useSelector(getCallerIdSelector);
   const accessToken = useSelector(userTokenSelector);
   console.log(callerId);
@@ -28,23 +30,25 @@ export const GettingCallInformationContainer = (props: GettingCallInformationCon
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.information}>
-        <Image source={{ uri: userData?.avatarUrl }} style={styles.avatar} />
-        <Text style={styles.userName}>
-          {userData?.firstName} {userData?.lastName}
-        </Text>
-        <Text style={styles.text}> call you</Text>
-      </View>
-      <View style={styles.actionButtons}>
-        <Button onPress={joinCall} icon="phone" color={palette.green}>
-          <Text>Reply</Text>
-        </Button>
-        <Text>|</Text>
-        <Button onPress={hangUp} icon="phone-hangup" color={palette.red}>
-          <Text>Cancel</Text>
-        </Button>
-      </View>
+    <View style={[styles.container, isExpandingModal && styles.containerWhenExpading]}>
+      <TouchableOpacity onPress={onPressModal}>
+        <View style={styles.information}>
+          <Image source={{ uri: userData?.avatarUrl }} style={styles.avatar} />
+          <Text style={styles.userName}>
+            {userData?.firstName} {userData?.lastName}
+          </Text>
+          <Text style={styles.text}> call you</Text>
+        </View>
+        <View style={styles.actionButtons}>
+          <Button onPress={joinCall} icon="phone" color={palette.green}>
+            <Text>Reply</Text>
+          </Button>
+          <Text>|</Text>
+          <Button onPress={hangUp} icon="phone-hangup" color={palette.red}>
+            <Text>Cancel</Text>
+          </Button>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -28,6 +28,7 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
 
   const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
+  const [isExpandingModal, setIsExpandingModal] = useState(false);
 
   const { offer: newOffer, groupId, isGettingCall } = useSelector(getNewOfferSelector);
   const dispatch = useAppDispatch();
@@ -41,13 +42,8 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const handleRemoteDescription = async (newDescription: RTCSessionDescriptionType) => {
     onHandleRemoteDescription({ newDescription, peerConnection });
   };
-  useEffect(() => {
-    if (isGettingCall) {
-      return setIsVisbleGettingCall(true);
-    }
-    return setIsVisbleGettingCall(false);
-  }, [isGettingCall]);
 
+  const handleExpandModal = () => setIsExpandingModal(true);
   const handleCreateAnswerDescription = async () => {
     if (peerConnection) {
       const answerDescription = (await peerConnection.createAnswer()) as RTCSessionDescription;
@@ -84,6 +80,13 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   };
 
   useEffect(() => {
+    if (isGettingCall) {
+      return setIsVisbleGettingCall(true);
+    }
+    return setIsVisbleGettingCall(false);
+  }, [isGettingCall]);
+
+  useEffect(() => {
     if (peerConnection) {
       peerConnection.onicecandidate = (event: EventOnCandidate) => {
         if (event.candidate) {
@@ -101,9 +104,14 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
       isVisible={isVisibleGettingCall}
       coverScreen={false}
       hasBackdrop={false}
-      style={styles.container}
+      style={[styles.container, isExpandingModal && styles.containerWhenExpanding]}
     >
-      <GettingCallInformationContainer hangUp={onHangUpCall} joinCall={joinCall} />
+      <GettingCallInformationContainer
+        hangUp={onHangUpCall}
+        joinCall={joinCall}
+        onPressModal={handleExpandModal}
+        isExpandingModal={isExpandingModal}
+      />
     </ModalVideoCall>
   );
 };
