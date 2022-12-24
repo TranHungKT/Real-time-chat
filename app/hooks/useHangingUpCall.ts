@@ -40,7 +40,6 @@ export const useHangingUpCall = () => {
   const hangUpCall = () => {
     handleEmitHangUpEvent();
     cleanUpTheCall();
-    streamCleanUp();
   };
 
   return {

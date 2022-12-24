@@ -16,7 +16,8 @@ import { useRemoteDescription } from '@Hooks/useRemoteDescription';
 import { callVideoActions, getNewOfferSelector } from '@Stores/callVideo';
 import { useAppDispatch } from '@Stores/index';
 
-import { GettingCall } from '../../components/GettingCall/GettingCall';
+import { GettingCallInformationContainer } from '../GettingCallInformationContainer/GettingCallInformationContainer';
+import { styles } from './GettingCallContainerStyles';
 
 interface GettingCallContainerProps {
   onHandleEmitAnswerEvent: (answerDescription?: RTCSessionDescription) => void;
@@ -96,8 +97,13 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   }, [dispatch, groupId, onHandleEmitIceCandidate, peerConnection]);
 
   return (
-    <ModalVideoCall isVisible={isVisibleGettingCall}>
-      <GettingCall hangUp={onHangUpCall} join={joinCall} />
+    <ModalVideoCall
+      isVisible={isVisibleGettingCall}
+      coverScreen={false}
+      hasBackdrop={false}
+      style={styles.container}
+    >
+      <GettingCallInformationContainer hangUp={onHangUpCall} joinCall={joinCall} />
     </ModalVideoCall>
   );
 };
