@@ -1,6 +1,5 @@
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
-import { deviceWidth, deviceHeight } from '@Constants/index';
 import { palette } from '@Themes/index';
 
 interface Styles {
@@ -10,7 +9,6 @@ interface Styles {
   userName: TextStyle;
   text: TextStyle;
   actionButtons: ViewStyle;
-  containerWhenExpading: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -29,11 +27,6 @@ export const styles = StyleSheet.create<Styles>({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-
-  containerWhenExpading: {
-    width: deviceWidth,
-    height: deviceHeight,
   },
 
   information: {

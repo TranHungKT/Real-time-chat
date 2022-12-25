@@ -7,11 +7,4 @@ export const styles = StyleSheet.create({
     right: 10,
     left: 10,
   },
-
-  containerWhenExpanding: {
-    position: 'relative',
-    top: 0,
-    right: 0,
-    left: 0,
-  },
 });

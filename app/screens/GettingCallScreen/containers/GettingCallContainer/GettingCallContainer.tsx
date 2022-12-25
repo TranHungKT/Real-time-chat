@@ -28,7 +28,6 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
 
   const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
-  const [isExpandingModal, setIsExpandingModal] = useState(false);
 
   const { offer: newOffer, groupId, isGettingCall } = useSelector(getNewOfferSelector);
   const dispatch = useAppDispatch();
@@ -43,7 +42,6 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
     onHandleRemoteDescription({ newDescription, peerConnection });
   };
 
-  const handleExpandModal = () => setIsExpandingModal(true);
   const handleCreateAnswerDescription = async () => {
     if (peerConnection) {
       const answerDescription = (await peerConnection.createAnswer()) as RTCSessionDescription;
@@ -104,14 +102,9 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
       isVisible={isVisibleGettingCall}
       coverScreen={false}
       hasBackdrop={false}
-      style={[styles.container, isExpandingModal && styles.containerWhenExpanding]}
+      style={styles.container}
     >
-      <GettingCallInformationContainer
-        hangUp={onHangUpCall}
-        joinCall={joinCall}
-        onPressModal={handleExpandModal}
-        isExpandingModal={isExpandingModal}
-      />
+      <GettingCallInformationContainer hangUp={onHangUpCall} joinCall={joinCall} />
     </ModalVideoCall>
   );
 };
