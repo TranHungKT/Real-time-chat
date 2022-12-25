@@ -8,7 +8,7 @@ import { BASE_URL } from '@Configs/index';
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { User } from '@Models/index';
 import { NavigatorParamList } from '@Navigators/index';
-import { fetchUserData } from '@Services/index';
+import { fetchCurrentUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userIdSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
@@ -39,8 +39,8 @@ export const LoginScreen = () => {
   );
 
   const { data } = useQuery(
-    ['getUserData', accessToken],
-    () => fetchUserData(accessToken as string),
+    ['getCurrentUserData', accessToken],
+    () => fetchCurrentUserData(accessToken as string),
     { enabled: accessToken ? true : false },
   );
 

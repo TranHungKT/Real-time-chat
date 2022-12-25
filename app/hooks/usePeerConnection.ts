@@ -16,6 +16,7 @@ import { useAppDispatch } from '@Stores/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+import { useHangingUpCall } from './useHangingUpCall';
 import { useRemoteDescription } from './useRemoteDescription';
 
 export interface OfferPayload {
@@ -36,6 +37,8 @@ export const usePeerConnection = () => {
   const groupId = useSelector(getGroupIdOfCallSelector);
 
   const onHandleRemoteDescription = useRemoteDescription();
+  const { onResetCall } = useHangingUpCall();
+
   const handleRemoteDescription = useCallback(
     async (newDescription: RTCSessionDescriptionType) => {
       onHandleRemoteDescription({ newDescription, peerConnection });
@@ -107,6 +110,12 @@ export const usePeerConnection = () => {
       };
     }
   }, [groupId, peerConnection, socket]);
+
+  useEffect(() => {
+    socket.on(SOCKET_EVENTS.HANG_UP_EVENT, () => {
+      onResetCall();
+    });
+  }, [onResetCall, socket]);
 
   return peerConnection;
 };

@@ -1,22 +1,23 @@
+import { ModalVideoCall } from 'components';
 import { PeerConnectionContext } from 'providers/CallVideoProvider';
 import { useState, useEffect, useContext } from 'react';
 import {
   EventOnAddStream,
   EventOnCandidate,
-  MediaStream,
   RTCSessionDescription,
   RTCSessionDescriptionType,
   RTCIceCandidateType,
 } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
 
-import { VideoCallContainer } from '@Containers/index';
 import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { useMediaStream } from '@Hooks/useMediaStream';
 import { useRemoteDescription } from '@Hooks/useRemoteDescription';
-import { getNewOfferSelector } from '@Stores/callVideo';
+import { callVideoActions, getNewOfferSelector } from '@Stores/callVideo';
+import { useAppDispatch } from '@Stores/index';
 
-import { GettingCall } from '../../components/GettingCall/GettingCall';
+import { GettingCallInformationContainer } from '../GettingCallInformationContainer/GettingCallInformationContainer';
+import { styles } from './GettingCallContainerStyles';
 
 interface GettingCallContainerProps {
   onHandleEmitAnswerEvent: (answerDescription?: RTCSessionDescription) => void;
@@ -25,12 +26,11 @@ interface GettingCallContainerProps {
 
 export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const { onHandleEmitAnswerEvent, onHandleEmitIceCandidate } = props;
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [isGettingCall, setIsGettingCall] = useState(true);
 
-  const { offer: newOffer, groupId } = useSelector(getNewOfferSelector);
+  const [isVisibleGettingCall, setIsVisbleGettingCall] = useState(false);
 
+  const { offer: newOffer, groupId, isGettingCall } = useSelector(getNewOfferSelector);
+  const dispatch = useAppDispatch();
   const peerConnection = useContext(PeerConnectionContext);
 
   const { onHangUpCall } = useHangingUpCall();
@@ -55,7 +55,7 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
   const handleLocalStream = async () => {
     const stream = await getMediaStream(peerConnection);
     if (stream) {
-      setLocalStream(stream);
+      dispatch(callVideoActions.setLocalStream(stream));
     }
   };
 
@@ -71,31 +71,18 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
         await handleLocalStream();
         await handleRemoteDescription(newOffer);
         await handleSendAnswer();
-
-        setIsGettingCall(false);
       }
     } catch (error) {
       console.log('error to join call', error);
     }
   };
 
-  const handleResetStream = () => {
-    setLocalStream(null);
-    setRemoteStream(null);
-  };
-
-  const streamCleanUp = () => {
-    if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-      localStream.release();
+  useEffect(() => {
+    if (isGettingCall) {
+      return setIsVisbleGettingCall(true);
     }
-    handleResetStream();
-  };
-
-  const hangUp = () => {
-    streamCleanUp();
-    onHangUpCall();
-  };
+    return setIsVisbleGettingCall(false);
+  }, [isGettingCall]);
 
   useEffect(() => {
     if (peerConnection) {
@@ -105,24 +92,19 @@ export const GettingCallContainer = (props: GettingCallContainerProps) => {
         }
       };
       peerConnection.onaddstream = (event: EventOnAddStream) => {
-        setRemoteStream(event.stream);
+        dispatch(callVideoActions.setRemoteStream(event.stream));
       };
     }
-  }, [groupId, onHandleEmitIceCandidate, peerConnection]);
+  }, [dispatch, groupId, onHandleEmitIceCandidate, peerConnection]);
 
-  if (isGettingCall) {
-    return <GettingCall hangUp={hangUp} join={joinCall} />;
-  }
-
-  if (localStream) {
-    return (
-      <VideoCallContainer
-        onHandleResetStream={handleResetStream}
-        localStream={localStream}
-        remoteStream={remoteStream}
-      />
-    );
-  }
-
-  return <></>;
+  return (
+    <ModalVideoCall
+      isVisible={isVisibleGettingCall}
+      coverScreen={false}
+      hasBackdrop={false}
+      style={styles.container}
+    >
+      <GettingCallInformationContainer hangUp={onHangUpCall} joinCall={joinCall} />
+    </ModalVideoCall>
+  );
 };
