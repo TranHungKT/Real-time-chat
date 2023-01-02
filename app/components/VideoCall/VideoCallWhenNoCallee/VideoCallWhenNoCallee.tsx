@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { RTCView, MediaStream } from 'react-native-webrtc';
 
-import { VideoCallActionButtons } from '../VideoCallActionButtons/VideoCallActionButtons';
+import { HangUpCallButton } from '../HangUpCallButton/HangUpCallButton';
 import { styles } from './VideoCallWhenNoCalleeStyles';
 
 interface VideoCallWhenNoCalleeProps {
-  localStream: MediaStream | null;
+  localStream: MediaStream;
 }
 
 export const VideoCallWhenNoCallee = (props: VideoCallWhenNoCalleeProps) => {
@@ -13,8 +13,8 @@ export const VideoCallWhenNoCallee = (props: VideoCallWhenNoCalleeProps) => {
 
   return (
     <View style={styles.container}>
-      <RTCView streamURL={localStream?.toURL() || ''} objectFit={'cover'} style={styles.video} />
-      <VideoCallActionButtons />
+      <RTCView streamURL={localStream.toURL()} objectFit={'cover'} style={styles.video} />
+      <HangUpCallButton />
     </View>
   );
 };

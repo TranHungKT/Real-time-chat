@@ -1,59 +1,37 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { useHangingUpCall } from '@Hooks/useHangingUpCall';
 import { palette } from '@Themes/index';
 
+import { HangUpCallButton } from '../HangUpCallButton/HangUpCallButton';
 import { styles } from './VideoCallActionButtonsStyles';
 
 interface VideoCallActionButtonsProps {
-  onToogleAudio?: () => void;
-  onToggleVideo?: () => void;
+  onToogleAudio: () => void;
+  onToggleVideo: () => void;
+  isVideoEnable: boolean;
+  isAudioEnable: boolean;
 }
 export const VideoCallActionButtons = (props: VideoCallActionButtonsProps) => {
-  const { onToogleAudio, onToggleVideo } = props;
-
-  const [isVideoEnable, setIsVideoEnable] = useState(true);
-  const [isAudioEnable, setIsAudioEnable] = useState(true);
-
-  const { onHangUpCall } = useHangingUpCall();
-
-  const handleToogleVideo = () => {
-    setIsVideoEnable(!isVideoEnable);
-    onToggleVideo && onToggleVideo();
-  };
-
-  const handleToogleAudio = () => {
-    setIsAudioEnable(!isAudioEnable);
-    onToogleAudio && onToogleAudio();
-  };
+  const { onToogleAudio, onToggleVideo, isAudioEnable, isVideoEnable } = props;
 
   return (
     <View style={styles.container}>
-      {onToogleAudio && (
-        <IconButton
-          icon={isAudioEnable ? 'microphone' : 'microphone-off'}
-          onPress={handleToogleAudio}
-          color={palette.white}
-          size={36}
-        />
-      )}
       <IconButton
-        icon="phone-hangup-outline"
-        onPress={onHangUpCall}
+        icon={isAudioEnable ? 'microphone' : 'microphone-off'}
+        onPress={onToogleAudio}
         color={palette.white}
-        style={styles.closeButton}
         size={36}
       />
-      {onToggleVideo && (
-        <IconButton
-          icon={isVideoEnable ? 'video-outline' : 'video-off-outline'}
-          onPress={handleToogleVideo}
-          color={palette.white}
-          size={36}
-        />
-      )}
+
+      <HangUpCallButton />
+
+      <IconButton
+        icon={isVideoEnable ? 'video-outline' : 'video-off-outline'}
+        onPress={onToggleVideo}
+        color={palette.white}
+        size={36}
+      />
     </View>
   );
 };

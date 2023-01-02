@@ -6,6 +6,7 @@ interface Styles {
   container: ViewStyle;
   video: ViewStyle;
   videoLocal: ViewStyle;
+  turnOffVideoLocal: ViewStyle;
   closeButton: ViewStyle;
 }
 
@@ -29,6 +30,10 @@ export const styles = StyleSheet.create<Styles>({
     top: 0,
     left: 20,
     elevation: 10,
+  },
+
+  turnOffVideoLocal: {
+    display: 'none',
   },
 
   closeButton: {
