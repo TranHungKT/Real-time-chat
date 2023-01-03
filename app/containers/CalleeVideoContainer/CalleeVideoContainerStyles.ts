@@ -29,10 +29,13 @@ export const styles = StyleSheet.create<Styles>({
   calleName: {
     color: palette.white,
     alignSelf: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 
   avatar: {
-    height: 56,
-    width: 56,
+    height: 78,
+    width: 78,
+    borderRadius: 39,
   },
 });
