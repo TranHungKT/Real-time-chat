@@ -9,6 +9,5 @@ interface Styles {
 export const styles = StyleSheet.create<Styles>({
   closeButton: {
     backgroundColor: palette.red,
-    marginBottom: 50,
   },
 });

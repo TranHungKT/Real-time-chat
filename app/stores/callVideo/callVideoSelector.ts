@@ -7,3 +7,4 @@ export const getIsGettingCallSelector = (state: RootState) => state.callVideo.is
 export const getLocalStreamSelector = (state: RootState) => state.callVideo.localStream;
 export const getRemoteStreamSelector = (state: RootState) => state.callVideo.remoteStream;
 export const getCallerIdSelector = (state: RootState) => state.callVideo.callerId;
+export const getCalleeInformationSelector = (state: RootState) => state.callVideo.callee;

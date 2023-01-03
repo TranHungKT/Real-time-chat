@@ -1,36 +1,55 @@
-import { View } from 'react-native';
-import { RTCView } from 'react-native-webrtc';
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 
-import { VideoCallActionButtons } from '@Components/index';
-import { useHangingUpCall } from '@Hooks/useHangingUpCall';
-import { getLocalStreamSelector, getRemoteStreamSelector } from '@Stores/callVideo';
-
-import { styles } from './VideoCallContainerStyles';
+import { VideoCallWhenNoCallee, VideoCallWithCallee } from '@Components/index';
+import { WebSocketContext } from '@Providers/index';
+import {
+  getGroupIdOfCallSelector,
+  getLocalStreamSelector,
+  getRemoteStreamSelector,
+} from '@Stores/callVideo';
 
 export const VideoCallContainer = () => {
   const localStream = useSelector(getLocalStreamSelector);
   const remoteStream = useSelector(getRemoteStreamSelector);
 
-  const { onHangUpCall } = useHangingUpCall();
+  const groupId = useSelector(getGroupIdOfCallSelector);
+
+  const socket = useContext(WebSocketContext);
+
+  const handleToogleStream = (type: 'video' | 'audio') => {
+    localStream?.getTracks().forEach((track) => {
+      if (track.kind === type) {
+        track.enabled = !track.enabled;
+      }
+    });
+  };
+
+  const handleEmitToggleStreamSocketEvent = ({
+    event,
+    value,
+  }: {
+    event: string;
+    value: boolean;
+  }) => {
+    socket.emit(event, {
+      groupId: groupId,
+      isEnable: value,
+    });
+  };
 
   if (localStream && !remoteStream) {
-    return (
-      <View style={styles.container}>
-        <RTCView streamURL={localStream?.toURL() || ''} objectFit={'cover'} style={styles.video} />
-        <VideoCallActionButtons onHandleHangUpCall={onHangUpCall} />
-      </View>
-    );
+    return <VideoCallWhenNoCallee localStream={localStream} />;
   }
 
   if (localStream && remoteStream) {
     return (
-      <View style={styles.container}>
-        <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
-        <RTCView streamURL={localStream.toURL()} objectFit={'cover'} style={styles.videoLocal} />
-
-        <VideoCallActionButtons onHandleHangUpCall={onHangUpCall} />
-      </View>
+      <VideoCallWithCallee
+        localStream={localStream}
+        remoteStream={remoteStream}
+        onToogleStream={handleToogleStream}
+        onEmitToggleStreamSocketEvent={handleEmitToggleStreamSocketEvent}
+      />
     );
   }
   return <></>;
