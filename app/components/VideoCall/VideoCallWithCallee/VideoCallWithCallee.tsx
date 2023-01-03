@@ -38,8 +38,6 @@ export const VideoCallWithCallee = (props: VideoCallWithCalleeProps) => {
     setIsAudioEnable(!isAudioEnable);
   };
 
-  console.log('loca', localStream.toURL());
-
   return (
     <View style={styles.container}>
       <CalleeVideoContainer remoteStream={remoteStream} />

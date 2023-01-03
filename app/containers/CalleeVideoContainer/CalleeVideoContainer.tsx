@@ -34,8 +34,6 @@ export const CalleeVideoContainer = (props: CalleeVideoContainerProps) => {
     });
   }, [isCalleeTurnOnAudio, isCalleeTurnOnVideo, socket]);
 
-  console.log(isCalleeTurnOnVideo);
-
   return (
     <>
       {isCalleeTurnOnVideo ? (
