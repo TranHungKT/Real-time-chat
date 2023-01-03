@@ -4,9 +4,7 @@ import { palette } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;
-  video: ViewStyle;
   videoLocal: ViewStyle;
-  turnOffVideoLocal: ViewStyle;
   closeButton: ViewStyle;
 }
 
@@ -17,23 +15,15 @@ export const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
   },
 
-  video: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-
   videoLocal: {
     position: 'absolute',
     width: 100,
     height: 150,
-    top: 0,
-    left: 20,
+    top: 30,
+    right: 30,
     elevation: 10,
-  },
-
-  turnOffVideoLocal: {
-    display: 'none',
+    borderRadius: 10,
+    zIndex: 10,
   },
 
   closeButton: {

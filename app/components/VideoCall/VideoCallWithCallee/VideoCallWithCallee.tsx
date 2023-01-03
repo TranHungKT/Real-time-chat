@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { RTCView, MediaStream } from 'react-native-webrtc';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { CalleeVideoContainer } from '@Containers/index';
 
 import { VideoCallActionButtons } from '../VideoCallActionButtons/VideoCallActionButtons';
 import { styles } from './VideoCallWithCalleeStyles';
@@ -37,14 +38,11 @@ export const VideoCallWithCallee = (props: VideoCallWithCalleeProps) => {
     setIsAudioEnable(!isAudioEnable);
   };
 
+  console.log('loca', localStream.toURL());
+
   return (
     <View style={styles.container}>
-      <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
-      <RTCView
-        streamURL={localStream.toURL()}
-        objectFit={'cover'}
-        style={isVideoEnable ? styles.videoLocal : styles.turnOffVideoLocal}
-      />
+      <CalleeVideoContainer remoteStream={remoteStream} />
 
       <VideoCallActionButtons
         onToogleAudio={handleToogleAudio}
@@ -52,6 +50,14 @@ export const VideoCallWithCallee = (props: VideoCallWithCalleeProps) => {
         isAudioEnable={isAudioEnable}
         isVideoEnable={isVideoEnable}
       />
+      {isVideoEnable && (
+        <RTCView
+          streamURL={localStream.toURL()}
+          objectFit={'cover'}
+          style={styles.videoLocal}
+          zOrder={1}
+        />
+      )}
     </View>
   );
 };

@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { palette } from 'themes';
 
 import { fetchUserDataById } from '@Services/index';
-import { getCallerIdSelector } from '@Stores/callVideo';
+import { callVideoActions, getCallerIdSelector } from '@Stores/callVideo';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
@@ -19,12 +20,18 @@ export const GettingCallInformationContainer = (props: GettingCallInformationCon
   const { hangUp, joinCall } = props;
   const callerId = useSelector(getCallerIdSelector);
   const accessToken = useSelector(userTokenSelector);
-
+  const dispatch = useDispatch();
   const { data: userData } = useQuery(
     ['getCurrentUserData', accessToken],
     () => fetchUserDataById({ token: accessToken, id: callerId }),
     { enabled: accessToken ? true : false },
   );
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(callVideoActions.setCallee(userData));
+    }
+  }, [dispatch, userData]);
 
   return (
     <View style={styles.container}>

@@ -16,6 +16,6 @@ export const styles = StyleSheet.create<Styles>({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 50,
+    paddingBottom: 50,
   },
 });

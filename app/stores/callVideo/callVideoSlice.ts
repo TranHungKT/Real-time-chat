@@ -1,3 +1,4 @@
+import { User } from 'models';
 import { MediaStream } from 'react-native-webrtc';
 
 import { OfferPayload } from '@Hooks/usePeerConnection';
@@ -8,6 +9,7 @@ export interface CallVideoState extends Partial<OfferPayload> {
   isGettingCall?: boolean;
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
+  callee?: Omit<User, 'accessToken'>;
 }
 
 const initialState: CallVideoState = {
@@ -36,6 +38,7 @@ export const callVideoSlice = createSlice({
       state.isGettingCall = false;
       state.remoteStream = null;
       state.localStream = null;
+      state.callee = undefined;
     },
 
     setCreateNewCall(state) {
@@ -51,6 +54,10 @@ export const callVideoSlice = createSlice({
     resetStream(state) {
       state.localStream = null;
       state.remoteStream = null;
+    },
+
+    setCallee(state, action: PayloadAction<Omit<User, 'accessToken'>>) {
+      state.callee = action.payload;
     },
   },
 });
