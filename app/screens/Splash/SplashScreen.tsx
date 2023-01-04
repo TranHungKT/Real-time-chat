@@ -46,14 +46,20 @@ export const SplashScreen = () => {
     if (accessToken && data) {
       dispatch(userActions.setUserData({ ...data, accessToken }));
     }
-    if (!accessToken) {
-      return navigation.navigate('LoginScreen');
+    if (accessToken === undefined) {
+      navigation.reset({
+        index: 1,
+        routes: [{ name: 'LoginScreen' }],
+      });
     }
   }, [accessToken, navigation, data, dispatch]);
 
   useEffect(() => {
     if (userId) {
-      return navigation.navigate('MainTobTab');
+      navigation.reset({
+        index: 1,
+        routes: [{ name: 'MainTobTab' }],
+      });
     }
   }, [navigation, userId]);
 

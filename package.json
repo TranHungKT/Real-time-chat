@@ -14,6 +14,7 @@
     "android:clean": "cd android && ./gradlew clean && cd .."
   },
   "dependencies": {
+    "@georstat/react-native-image-cache": "^2.3.0",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-native-firebase/app": "^16.4.6",
     "@react-native-firebase/firestore": "^16.4.6",
@@ -34,6 +35,7 @@
     "react-native": "0.67.3",
     "react-native-device-info": "^10.3.0",
     "react-native-fast-image": "^8.6.3",
+    "react-native-file-access": "^2.5.2",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-gifted-chat": "^1.0.4",
     "react-native-image-picker": "^4.10.0",

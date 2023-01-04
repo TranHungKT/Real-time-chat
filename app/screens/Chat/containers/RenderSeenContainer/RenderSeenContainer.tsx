@@ -1,8 +1,9 @@
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { BubbleProps, IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { getAvatarOfSeenUser } from '@Stores/groups';
+import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './RenderSeenContainerStyles';
 
@@ -30,7 +31,7 @@ export const RenderSeenContainer = (props: RenderSeenContainerProps) => {
   return (
     <View>
       {!!bubbleMessages?.currentMessage.seen && (
-        <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+        <CachedImage source={avatarUrl} style={styles.avatar} />
       )}
     </View>
   );

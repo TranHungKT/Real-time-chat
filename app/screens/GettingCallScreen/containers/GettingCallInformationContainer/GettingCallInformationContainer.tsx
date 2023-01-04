@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSelector, useDispatch } from 'react-redux';
 import { palette } from 'themes';
@@ -7,6 +7,7 @@ import { palette } from 'themes';
 import { fetchUserDataById } from '@Services/index';
 import { callVideoActions, getCallerIdSelector } from '@Stores/callVideo';
 import { userTokenSelector } from '@Stores/user';
+import { CachedImage } from '@georstat/react-native-image-cache';
 import { useQuery } from '@tanstack/react-query';
 
 import { styles } from './GettingCallInformationContainerStyles';
@@ -36,7 +37,7 @@ export const GettingCallInformationContainer = (props: GettingCallInformationCon
   return (
     <View style={styles.container}>
       <View style={styles.information}>
-        <Image source={{ uri: userData?.avatarUrl }} style={styles.avatar} />
+        <CachedImage source={userData?.avatarUrl || ''} style={styles.avatar} />
         <Text style={styles.userName}>
           {userData?.firstName} {userData?.lastName}
         </Text>
