@@ -1,11 +1,10 @@
-import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Text, Image, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { UserStatus } from '@Models/index';
 import { currentGroupSelector } from '@Stores/groups';
 import { getUserStatusByIdSelector, userIdSelector } from '@Stores/user';
 import { getImageSource } from '@Utils/index';
-import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './HeaderGroupChatContainerStyles';
 
@@ -36,8 +35,8 @@ export const HeaderGroupChatContainer = (props: HeaderGroupChatContainerProps) =
       style={[styles.container, styleContainer]}
       disabled={!onClickHeader}
     >
-      <CachedImage
-        source={getImageSource(currentGroup.groupAvatar, isMoreThan2Member).toString()}
+      <Image
+        source={getImageSource(currentGroup.groupAvatar, isMoreThan2Member)}
         style={styles.avatar}
       />
       <View style={styles.groupNameView}>
