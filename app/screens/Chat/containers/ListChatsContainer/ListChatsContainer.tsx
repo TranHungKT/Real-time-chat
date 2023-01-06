@@ -30,19 +30,14 @@ export const ListChatsContainer = () => {
     () =>
       fetchListMessages({
         token: accessToken,
-        pageNumber: currentPage,
+        pageNumber: currentPage + 1,
         pageSize: PAGE_SIZE,
         groupId: currentGroup?._id,
       }),
     { enabled: isRefetch, refetchOnMount: false },
   );
 
-  const handleLoadEarlierMessages = () => {
-    dispatch(
-      messagesActions.setCurrentPage({ page: currentPage + 1, groupId: currentGroup?._id || '' }),
-    );
-    setIsRefetch(true);
-  };
+  const handleLoadEarlierMessages = () => setIsRefetch(true);
 
   useEffect(() => {
     if (listMessages && isRefetch) {
@@ -51,16 +46,17 @@ export const ListChatsContainer = () => {
           count: listMessages.count,
           list: listMessages.list,
           groupId: listMessages.groupId,
-          currentPage: listMessages.currentPage,
+          currentPage: currentPage + 1,
         }),
       );
       setIsRefetch(false);
     }
-  }, [dispatch, listMessages, isRefetch]);
+  }, [dispatch, listMessages, isRefetch, currentPage]);
 
   return (
     <SendAndDisplayMessageContainer
       messages={groupMessages?.messages}
+      count={groupMessages?.count}
       onLoadEarlierMessages={handleLoadEarlierMessages}
     />
   );

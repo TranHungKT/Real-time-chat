@@ -16,6 +16,7 @@ import { styles } from './DisplayMessageContainerStyles';
 
 interface DisplayMessageContainerProps {
   messages?: IMessage[];
+  count?: number;
   isTyping: boolean;
   onTextInputChanged: (text: string) => void;
   onSendMessages: (newMess: NewMessageContent[]) => void;
@@ -23,7 +24,8 @@ interface DisplayMessageContainerProps {
 }
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
-  const { messages, onTextInputChanged, onSendMessages, isTyping, onLoadEarlierMessages } = props;
+  const { messages, onTextInputChanged, onSendMessages, isTyping, onLoadEarlierMessages, count } =
+    props;
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
 
@@ -64,6 +66,8 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     };
   };
 
+  const isLoadEarlier = () => messages?.length !== count;
+
   const renderFooter = () => {
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
   };
@@ -95,15 +99,15 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       onSend={handleSendMessage}
       keyboardShouldPersistTaps="never"
       forceGetKeyboardHeight={true}
-      loadEarlier={true}
+      loadEarlier={isLoadEarlier()}
       onLoadEarlier={onLoadEarlierMessages}
       renderFooter={renderFooter}
       renderBubble={renderBubble}
       renderActions={renderActions}
       renderChatFooter={renderChatFooter}
+      infiniteScroll
       scrollToBottom
       scrollToBottomComponent={renderScrollToBottomComponent}
-      infiniteScroll
       scrollToBottomStyle={styles.scollBottomStyle}
     />
   );

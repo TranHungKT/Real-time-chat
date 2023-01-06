@@ -75,12 +75,6 @@ export const messagesSlice = createSlice({
         });
       }
     },
-
-    setCurrentPage(state, action: PayloadAction<{ page: number; groupId: string }>) {
-      const { page, groupId } = action.payload;
-
-      state.groupMessages[groupId].currentPage = page;
-    },
   },
 });
 

@@ -46,7 +46,6 @@ export const fetchListMessages = async ({
   currentPage: number;
 }> => {
   try {
-    console.log('helsod');
     const response = await axios.get(
       `${BASE_URL}list-message?groupId=${groupId}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
       {
