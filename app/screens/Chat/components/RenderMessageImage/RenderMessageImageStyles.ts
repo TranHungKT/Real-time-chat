@@ -13,6 +13,7 @@ export const styles = StyleSheet.create<Styles>({
     minHeight: 100,
     borderRadius: 20,
     marginBottom: 5,
+    overflow: 'hidden',
   },
 
   wrapperImageStyle: {

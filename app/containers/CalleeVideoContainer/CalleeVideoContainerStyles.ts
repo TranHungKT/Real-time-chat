@@ -37,5 +37,6 @@ export const styles = StyleSheet.create<Styles>({
     height: 78,
     width: 78,
     borderRadius: 39,
+    overflow: 'hidden',
   },
 });

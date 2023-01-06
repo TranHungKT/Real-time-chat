@@ -39,6 +39,7 @@ export const styles = StyleSheet.create<Styles>({
     height: 54,
     borderRadius: 26,
     marginRight: 20,
+    overflow: 'hidden',
   },
 
   userName: {

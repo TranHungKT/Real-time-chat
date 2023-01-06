@@ -34,6 +34,7 @@ export const styles = StyleSheet.create<Styles>({
     width: 15,
     height: 15,
     borderRadius: 8,
+    overflow: 'hidden',
   },
 
   tickView: {
