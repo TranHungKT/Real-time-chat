@@ -9,6 +9,7 @@ import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
+import { RenderScrollToBottom } from '../../components/RenderScrollToBottom';
 import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
 import { TypingContainer } from '../TypingContainer';
 import { styles } from './DisplayMessageContainerStyles';
@@ -81,6 +82,10 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     return <View style={styles.chatFooter} />;
   };
 
+  const renderScrollToBottomComponent = () => {
+    return <RenderScrollToBottom />;
+  };
+
   return (
     <GiftedChat
       messages={messages}
@@ -96,6 +101,10 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       renderBubble={renderBubble}
       renderActions={renderActions}
       renderChatFooter={renderChatFooter}
+      scrollToBottom
+      scrollToBottomComponent={renderScrollToBottomComponent}
+      infiniteScroll
+      scrollToBottomStyle={styles.scollBottomStyle}
     />
   );
 };
