@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PAGE_SIZE } from '@Constants/index';
 import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
-import { getMessagesForGroupSelector, messagesActions } from '@Stores/messages';
+import {
+  getCurrentPageSelector,
+  getMessagesForGroupSelector,
+  messagesActions,
+} from '@Stores/messages';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,46 +18,43 @@ export const ListChatsContainer = () => {
   const groupMessages = useSelector(getMessagesForGroupSelector);
   const accessToken = useSelector(userTokenSelector);
   const currentGroup = useSelector(currentGroupSelector);
-
+  const currentPageSelector = useSelector(getCurrentPageSelector);
+  const currentPage = currentPageSelector({ groupId: currentGroup?._id || '' });
   const [refetch, setRefetch] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
-
   const dispatch = useDispatch();
 
-  const { data: listMessages, isSuccess } = useQuery(
-    ['fetchListMessagesAgain', currentGroup?._id, pageNumber],
+  const { data: listMessages } = useQuery(
+    ['fetchListMessagesAgain', currentGroup?._id, currentPage],
     () =>
       fetchListMessages({
         token: accessToken,
-        pageNumber: pageNumber,
+        pageNumber: currentPage,
         pageSize: PAGE_SIZE,
         groupId: currentGroup?._id,
       }),
-    { enabled: refetch },
+    { enabled: refetch, refetchOnMount: false },
   );
 
   const handleLoadEarlierMessages = () => {
-    setPageNumber(pageNumber + 1);
+    dispatch(
+      messagesActions.setCurrentPage({ page: currentPage + 1, groupId: currentGroup?._id || '' }),
+    );
     setRefetch(true);
   };
 
   useEffect(() => {
-    if (listMessages) {
+    if (listMessages && refetch) {
       dispatch(
         messagesActions.setMessages({
           count: listMessages.count,
           list: listMessages.list,
           groupId: listMessages.groupId,
+          currentPage: listMessages.currentPage,
         }),
       );
-    }
-  }, [dispatch, listMessages]);
-
-  useEffect(() => {
-    if (isSuccess) {
       setRefetch(false);
     }
-  }, [isSuccess]);
+  }, [dispatch, listMessages, refetch]);
 
   return (
     <SendAndDisplayMessageContainer

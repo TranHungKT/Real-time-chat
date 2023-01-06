@@ -67,6 +67,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
           count: listMessages.count,
           list: listMessages.list,
           groupId: listMessages.groupId,
+          currentPage: listMessages.currentPage,
         }),
       );
     }

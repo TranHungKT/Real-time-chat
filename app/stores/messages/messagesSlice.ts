@@ -8,6 +8,7 @@ export interface MessagesState {
     [groupId: string]: {
       messages: IMessage[];
       count: number;
+      currentPage: number;
     };
   };
 }
@@ -22,19 +23,26 @@ export const messagesSlice = createSlice({
   reducers: {
     setMessages(
       state,
-      action: PayloadAction<{ list: IMessage[]; count: number; groupId: string }>,
+      action: PayloadAction<{
+        list: IMessage[];
+        count: number;
+        groupId: string;
+        currentPage: number;
+      }>,
     ) {
-      const { groupId, count, list } = action.payload;
+      const { groupId, count, list, currentPage } = action.payload;
 
       if (state.groupMessages[groupId]) {
         state.groupMessages[groupId] = {
           messages: [...state.groupMessages[groupId].messages, ...list],
           count: count,
+          currentPage: currentPage,
         };
       } else {
         state.groupMessages[groupId] = {
           messages: list,
           count: count,
+          currentPage: currentPage,
         };
       }
     },
@@ -66,6 +74,12 @@ export const messagesSlice = createSlice({
           }
         });
       }
+    },
+
+    setCurrentPage(state, action: PayloadAction<{ page: number; groupId: string }>) {
+      const { page, groupId } = action.payload;
+
+      state.groupMessages[groupId].currentPage = page;
     },
   },
 });

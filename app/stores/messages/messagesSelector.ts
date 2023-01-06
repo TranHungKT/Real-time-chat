@@ -27,3 +27,14 @@ export const getMessagesUnSeenOrReceivedByGroupIdSelector = createSelector(
       }
     },
 );
+
+export const getCurrentPageSelector = createSelector(
+  getGroupMessagesSelector,
+  (groupMessages) =>
+    ({ groupId }: { groupId: string }) => {
+      if (groupMessages[groupId]) {
+        return groupMessages[groupId].currentPage;
+      }
+      return 1;
+    },
+);
