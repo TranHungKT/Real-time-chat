@@ -26,10 +26,17 @@ export const messagesSlice = createSlice({
     ) {
       const { groupId, count, list } = action.payload;
 
-      state.groupMessages[groupId] = {
-        messages: list,
-        count: count,
-      };
+      if (state.groupMessages[groupId]) {
+        state.groupMessages[groupId] = {
+          messages: [...state.groupMessages[groupId].messages, ...list],
+          count: count,
+        };
+      } else {
+        state.groupMessages[groupId] = {
+          messages: list,
+          count: count,
+        };
+      }
     },
 
     addNewMessageToCurrentGroup(state, action: PayloadAction<NewMessageFromSocket>) {

@@ -18,10 +18,11 @@ interface DisplayMessageContainerProps {
   isTyping: boolean;
   onTextInputChanged: (text: string) => void;
   onSendMessages: (newMess: NewMessageContent[]) => void;
+  onLoadEarlierMessages: () => void;
 }
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
-  const { messages, onTextInputChanged, onSendMessages, isTyping } = props;
+  const { messages, onTextInputChanged, onSendMessages, isTyping, onLoadEarlierMessages } = props;
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
 
@@ -89,6 +90,8 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       onSend={handleSendMessage}
       keyboardShouldPersistTaps="never"
       forceGetKeyboardHeight={true}
+      loadEarlier={true}
+      onLoadEarlier={onLoadEarlierMessages}
       renderFooter={renderFooter}
       renderBubble={renderBubble}
       renderActions={renderActions}

@@ -15,10 +15,11 @@ import { DisplayMessageContainer } from '../DisplayMessageContainer';
 
 interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
+  onLoadEarlierMessages: () => void;
 }
 
 export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageContainerProps) => {
-  const { messages } = props;
+  const { messages, onLoadEarlierMessages } = props;
   const socket = useContext(WebSocketContext);
 
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
@@ -100,6 +101,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       isTyping={isTyping}
       onTextInputChanged={handleTextInputChanged}
       onSendMessages={handleSendMessage}
+      onLoadEarlierMessages={onLoadEarlierMessages}
     />
   );
 };
