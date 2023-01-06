@@ -20,8 +20,10 @@ export const ListChatsContainer = () => {
   const currentGroup = useSelector(currentGroupSelector);
   const currentPageSelector = useSelector(getCurrentPageSelector);
   const currentPage = currentPageSelector({ groupId: currentGroup?._id || '' });
-  const [refetch, setRefetch] = useState(false);
+
   const dispatch = useDispatch();
+
+  const [isRefetch, setIsRefetch] = useState(false);
 
   const { data: listMessages } = useQuery(
     ['fetchListMessagesAgain', currentGroup?._id, currentPage],
@@ -32,18 +34,18 @@ export const ListChatsContainer = () => {
         pageSize: PAGE_SIZE,
         groupId: currentGroup?._id,
       }),
-    { enabled: refetch, refetchOnMount: false },
+    { enabled: isRefetch, refetchOnMount: false },
   );
 
   const handleLoadEarlierMessages = () => {
     dispatch(
       messagesActions.setCurrentPage({ page: currentPage + 1, groupId: currentGroup?._id || '' }),
     );
-    setRefetch(true);
+    setIsRefetch(true);
   };
 
   useEffect(() => {
-    if (listMessages && refetch) {
+    if (listMessages && isRefetch) {
       dispatch(
         messagesActions.setMessages({
           count: listMessages.count,
@@ -52,9 +54,9 @@ export const ListChatsContainer = () => {
           currentPage: listMessages.currentPage,
         }),
       );
-      setRefetch(false);
+      setIsRefetch(false);
     }
-  }, [dispatch, listMessages, refetch]);
+  }, [dispatch, listMessages, isRefetch]);
 
   return (
     <SendAndDisplayMessageContainer
