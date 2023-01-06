@@ -43,7 +43,6 @@ export const fetchListMessages = async ({
   groupId: string;
   list: IMessage[];
   count: number;
-  currentPage: number;
 }> => {
   try {
     const response = await axios.get(
