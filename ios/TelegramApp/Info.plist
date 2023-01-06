@@ -9,6 +9,10 @@
 		<string>MaterialCommunityIcons.ttf</string>
 		<string>MaterialIcons.ttf</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission description</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone permission description</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
