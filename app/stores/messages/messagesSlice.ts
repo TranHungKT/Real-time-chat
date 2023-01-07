@@ -32,7 +32,10 @@ export const messagesSlice = createSlice({
     ) {
       const { groupId, count, list, currentPage } = action.payload;
 
-      if (state.groupMessages[groupId]) {
+      if (
+        state.groupMessages[groupId] &&
+        currentPage !== state.groupMessages[groupId].currentPage
+      ) {
         state.groupMessages[groupId] = {
           messages: [...state.groupMessages[groupId].messages, ...list],
           count: count,
