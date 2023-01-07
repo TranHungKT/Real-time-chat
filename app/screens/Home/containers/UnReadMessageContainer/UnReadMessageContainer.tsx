@@ -1,10 +1,11 @@
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { LastMessage } from '@Models/index';
 import { getAvatarOfSeenUser } from '@Stores/groups';
 import { userIdSelector } from '@Stores/user';
+import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './UnReadMessageContainerStyles';
 
@@ -23,7 +24,7 @@ export const UnReadMessageContainer = (props: UnReadMessageContainerProps) => {
 
   const renderSeen = () => {
     if (lastMessage?.seen) {
-      return <Image source={{ uri: avatar }} style={styles.avatar} />;
+      return <CachedImage source={avatar} style={styles.avatar} />;
     }
 
     return (

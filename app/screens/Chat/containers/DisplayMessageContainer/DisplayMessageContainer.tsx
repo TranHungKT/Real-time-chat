@@ -9,19 +9,23 @@ import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
+import { RenderScrollToBottom } from '../../components/RenderScrollToBottom';
 import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
 import { TypingContainer } from '../TypingContainer';
 import { styles } from './DisplayMessageContainerStyles';
 
 interface DisplayMessageContainerProps {
   messages?: IMessage[];
+  count?: number;
   isTyping: boolean;
   onTextInputChanged: (text: string) => void;
   onSendMessages: (newMess: NewMessageContent[]) => void;
+  onLoadEarlierMessages: () => void;
 }
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
-  const { messages, onTextInputChanged, onSendMessages, isTyping } = props;
+  const { messages, onTextInputChanged, onSendMessages, isTyping, onLoadEarlierMessages, count } =
+    props;
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
 
@@ -62,6 +66,8 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     };
   };
 
+  const isLoadEarlier = () => messages?.length !== count;
+
   const renderFooter = () => {
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
   };
@@ -80,6 +86,10 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     return <View style={styles.chatFooter} />;
   };
 
+  const renderScrollToBottomComponent = () => {
+    return <RenderScrollToBottom />;
+  };
+
   return (
     <GiftedChat
       messages={messages}
@@ -89,10 +99,16 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       onSend={handleSendMessage}
       keyboardShouldPersistTaps="never"
       forceGetKeyboardHeight={true}
+      loadEarlier={isLoadEarlier()}
+      onLoadEarlier={onLoadEarlierMessages}
       renderFooter={renderFooter}
       renderBubble={renderBubble}
       renderActions={renderActions}
       renderChatFooter={renderChatFooter}
+      infiniteScroll
+      scrollToBottom
+      scrollToBottomComponent={renderScrollToBottomComponent}
+      scrollToBottomStyle={styles.scollBottomStyle}
     />
   );
 };

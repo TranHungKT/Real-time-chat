@@ -10,5 +10,6 @@ export const styles = StyleSheet.create<Styles>({
     height: 15,
     borderRadius: 8,
     marginTop: 2,
+    overflow: 'hidden',
   },
 });

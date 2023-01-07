@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { MediaStream, RTCView } from 'react-native-webrtc';
 import { useSelector } from 'react-redux';
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCalleeInformationSelector } from '@Stores/callVideo';
+import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './CalleeVideoContainerStyles';
 
@@ -40,7 +41,7 @@ export const CalleeVideoContainer = (props: CalleeVideoContainerProps) => {
         <RTCView streamURL={remoteStream.toURL()} objectFit={'cover'} style={styles.video} />
       ) : (
         <View style={styles.calleeTurnOffVideo}>
-          <Image source={{ uri: callee?.avatarUrl }} style={styles.avatar} />
+          <CachedImage source={callee?.avatarUrl || ''} style={styles.avatar} />
           <Text style={styles.calleName}>
             {callee?.firstName} {callee?.lastName}
           </Text>

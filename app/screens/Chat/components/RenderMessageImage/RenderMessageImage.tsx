@@ -1,5 +1,6 @@
-import { Image } from 'react-native';
 import { IMessage, MessageImageProps, Bubble, BubbleProps } from 'react-native-gifted-chat';
+
+import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './RenderMessageImageStyles';
 
@@ -11,7 +12,7 @@ export const RenderMessageImage = (props: RenderMessageImageProps) => {
   const { renderBubbleMessages } = props;
 
   const renderMessageImage = (message: MessageImageProps<IMessage>) => {
-    return <Image source={{ uri: message.currentMessage?.image }} style={styles.image} />;
+    return <CachedImage source={message.currentMessage?.image || ''} style={styles.image} />;
   };
 
   return (

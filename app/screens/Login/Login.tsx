@@ -78,7 +78,10 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     if (userId) {
-      navigation.navigate('MainTobTab');
+      return navigation.reset({
+        index: 1,
+        routes: [{ name: 'MainTobTab' }],
+      });
     }
   }, [navigation, userId]);
 
