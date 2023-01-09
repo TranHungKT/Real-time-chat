@@ -4,3 +4,4 @@ export { EmptyOrErrorContent } from './EmptyOrErrorContent';
 export { SnackBarError } from './SnackBarError';
 export { LoadingComponent } from './LoadingComponent';
 export * from './VideoCall';
+export { ButtonSvg } from './ButtonSvg';

@@ -18,9 +18,11 @@ interface Styles {
 
 export const styles = StyleSheet.create<Styles>({
   container: {
+    flex: 1,
     flexDirection: 'row',
     marginBottom: spacing.large,
     alignItems: 'center',
+    backgroundColor: palette.white,
   },
 
   groupView: {
