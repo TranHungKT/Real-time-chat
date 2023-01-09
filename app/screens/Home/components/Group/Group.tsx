@@ -1,9 +1,10 @@
 import moment from 'moment';
-import { View, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, TouchableHighlight, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 import { getImageSource } from 'utils';
 
 import { Group as IGroup, UserStatus } from '@Models/index';
+import { palette } from '@Themes/index';
 
 import { LastMessageContainer } from '../../containers/LastMessageContainer';
 import { UnReadMessageContainer } from '../../containers/UnReadMessageContainer';
@@ -23,7 +24,13 @@ export const Group = (props: GroupProps) => {
   const isMoreThan2Member = () => group.members.length > 2;
 
   return (
-    <TouchableOpacity key={_id} style={styles.container} onPress={onClickGroup}>
+    <TouchableHighlight
+      key={_id}
+      style={styles.container}
+      onPress={onClickGroup}
+      activeOpacity={0.9}
+      underlayColor={palette.mediumWhite}
+    >
       <>
         <ImageBackground
           source={getImageSource(groupAvatar, isMoreThan2Member())}
@@ -57,6 +64,6 @@ export const Group = (props: GroupProps) => {
           )}
         </View>
       </>
-    </TouchableOpacity>
+    </TouchableHighlight>
   );
 };

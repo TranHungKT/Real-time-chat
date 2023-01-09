@@ -6,7 +6,7 @@ import { paddingHorizontalSpace } from '@Themes/index';
 
 interface Styles {
   safeArea: ViewStyle;
-  container: ViewStyle;
+  header: ViewStyle;
   content: ViewStyle;
   activityIndicator: ViewStyle;
 }
@@ -15,9 +15,8 @@ export const styles = StyleSheet.create<Styles>({
   safeArea: {
     ...COMMON_STYLES.safeArea,
   },
-  container: {
+  header: {
     paddingHorizontal: paddingHorizontalSpace,
-    flex: 1,
   },
   content: {
     marginTop: hasNotch() ? 60 : 50,

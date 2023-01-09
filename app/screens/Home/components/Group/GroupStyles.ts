@@ -1,6 +1,6 @@
 import { StyleSheet, TextStyle, ViewStyle, ImageStyle } from 'react-native';
 
-import { palette, sizes, spacing } from '@Themes/index';
+import { paddingHorizontalSpace, palette, sizes, spacing } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;
@@ -23,6 +23,7 @@ export const styles = StyleSheet.create<Styles>({
     marginBottom: spacing.large,
     alignItems: 'center',
     backgroundColor: palette.white,
+    paddingHorizontal: paddingHorizontalSpace,
   },
 
   groupView: {

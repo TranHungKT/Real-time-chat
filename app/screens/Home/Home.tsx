@@ -82,11 +82,10 @@ export const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+      <View style={styles.header}>
         <Header />
-
-        {renderComponent()}
       </View>
+      {renderComponent()}
     </SafeAreaView>
   );
 };

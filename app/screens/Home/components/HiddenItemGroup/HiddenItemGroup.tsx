@@ -9,8 +9,8 @@ export const HiddenItemGroup = () => {
   return (
     <View style={styles.container}>
       <ButtonSvg onPress={() => {}} iconSvg={AchiveChatSvg} />
-      <ButtonSvg onPress={() => {}} iconSvg={DeleteSvg} />
       <ButtonSvg onPress={() => {}} iconSvg={SeenMessageSvg} />
+      <ButtonSvg onPress={() => {}} iconSvg={DeleteSvg} />
     </View>
   );
 };

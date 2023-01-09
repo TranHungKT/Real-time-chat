@@ -24,6 +24,7 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
       renderHiddenItem={() => <HiddenItemGroup />}
       rightOpenValue={deviceWidth * -0.6}
       disableRightSwipe
+      rightActionValue={-100}
     />
   );
 };
