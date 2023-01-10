@@ -1,8 +1,9 @@
 import { View } from 'react-native';
 
 import { ButtonSvg } from '@Components/index';
-import { AchiveChatSvg, DeleteSvg, SeenMessageSvg } from '@Constants/index';
+import { AchiveChatSvg, SeenMessageSvg } from '@Constants/index';
 
+import { DeleteGroupContainer } from '../../containers/DeleteGroupContainer';
 import { styles } from './HiddenItemGroupStyle';
 
 export const HiddenItemGroup = () => {
@@ -10,7 +11,7 @@ export const HiddenItemGroup = () => {
     <View style={styles.container}>
       <ButtonSvg onPress={() => {}} iconSvg={AchiveChatSvg} />
       <ButtonSvg onPress={() => {}} iconSvg={SeenMessageSvg} />
-      <ButtonSvg onPress={() => {}} iconSvg={DeleteSvg} />
+      <DeleteGroupContainer />
     </View>
   );
 };
