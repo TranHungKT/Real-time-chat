@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { TouchableHighlight, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { Button, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { palette } from 'themes';
 
 import { ButtonSvg } from '@Components/index';
@@ -23,27 +23,26 @@ export const DeleteGroupContainer = () => {
           Are you sure you want to permanently delete this conversation?
         </Text>
         <View style={styles.buttonView}>
-          <View style={styles.cancelButton}>
-            <Button
-              onPress={handleCancel}
-              color={palette.blue}
-              uppercase={false}
-              labelStyle={styles.buttonText}
-            >
+          <TouchableHighlight
+            style={styles.cancelButton}
+            activeOpacity={0.5}
+            underlayColor={palette.mediumWhite}
+            onPress={handleCancel}
+          >
+            <Text variant="titleMedium" style={styles.cancelButtonContent}>
               Cancel
-            </Button>
-          </View>
-          <View style={styles.deleteButton}>
-            <Button
-              textColor={palette.red}
-              uppercase={false}
-              labelStyle={styles.buttonText}
-              onPress={handleCancel}
-              mode="text"
-            >
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.deleteButton}
+            activeOpacity={0.5}
+            onPress={handleCancel}
+            underlayColor={palette.mediumWhite}
+          >
+            <Text variant="titleMedium" style={styles.deleteButtonContent}>
               Delete
-            </Button>
-          </View>
+            </Text>
+          </TouchableHighlight>
         </View>
       </Modal>
     </>

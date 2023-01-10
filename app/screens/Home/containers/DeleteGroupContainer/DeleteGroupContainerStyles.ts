@@ -10,6 +10,8 @@ interface Styles {
   cancelButton: ViewStyle;
   deleteButton: ViewStyle;
   buttonText: TextStyle;
+  cancelButtonContent: TextStyle;
+  deleteButtonContent: TextStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -42,15 +44,25 @@ export const styles = StyleSheet.create<Styles>({
     borderRightWidth: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderBottomLeftRadius: 20,
   },
 
   deleteButton: {
     flex: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderBottomRightRadius: 20,
   },
 
   buttonText: {
     fontSize: 18,
+  },
+
+  cancelButtonContent: {
+    color: palette.blue,
+  },
+
+  deleteButtonContent: {
+    color: palette.red,
   },
 });
