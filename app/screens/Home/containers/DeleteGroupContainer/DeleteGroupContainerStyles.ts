@@ -9,7 +9,6 @@ interface Styles {
   content: TextStyle;
   cancelButton: ViewStyle;
   deleteButton: ViewStyle;
-  buttonText: TextStyle;
   cancelButtonContent: TextStyle;
   deleteButtonContent: TextStyle;
 }
@@ -54,15 +53,13 @@ export const styles = StyleSheet.create<Styles>({
     borderBottomRightRadius: 20,
   },
 
-  buttonText: {
-    fontSize: 18,
-  },
-
   cancelButtonContent: {
     color: palette.blue,
+    fontSize: 18,
   },
 
   deleteButtonContent: {
     color: palette.red,
+    fontSize: 18,
   },
 });

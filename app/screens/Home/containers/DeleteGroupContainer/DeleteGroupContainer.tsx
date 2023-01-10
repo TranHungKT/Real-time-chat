@@ -29,9 +29,7 @@ export const DeleteGroupContainer = () => {
             underlayColor={palette.mediumWhite}
             onPress={handleCancel}
           >
-            <Text variant="titleMedium" style={styles.cancelButtonContent}>
-              Cancel
-            </Text>
+            <Text style={styles.cancelButtonContent}>Cancel</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={styles.deleteButton}
@@ -39,9 +37,7 @@ export const DeleteGroupContainer = () => {
             onPress={handleCancel}
             underlayColor={palette.mediumWhite}
           >
-            <Text variant="titleMedium" style={styles.deleteButtonContent}>
-              Delete
-            </Text>
+            <Text style={styles.deleteButtonContent}>Delete</Text>
           </TouchableHighlight>
         </View>
       </Modal>
