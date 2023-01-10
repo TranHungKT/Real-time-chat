@@ -78,6 +78,14 @@ export const messagesSlice = createSlice({
         });
       }
     },
+
+    deleteMessagesByGroupId(state, action: PayloadAction<string>) {
+      const groupMessages = state.groupMessages;
+      const groupId = action.payload;
+      const { [groupId]: value, ...rest } = groupMessages;
+
+      state.groupMessages = rest;
+    },
   },
 });
 

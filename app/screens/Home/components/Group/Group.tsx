@@ -15,10 +15,13 @@ interface GroupProps {
   onClickGroup: () => void;
   numberOfUnReadMessage?: number;
   userStatus: UserStatus;
+  isDeleting?: boolean;
+  errorDeleting?: string;
 }
 
 export const Group = (props: GroupProps) => {
-  const { group, onClickGroup, numberOfUnReadMessage, userStatus } = props;
+  const { group, onClickGroup, numberOfUnReadMessage, userStatus, isDeleting, errorDeleting } =
+    props;
   const { _id, name, lastUpdatedAt, groupAvatar } = group;
 
   const isMoreThan2Member = () => group.members.length > 2;

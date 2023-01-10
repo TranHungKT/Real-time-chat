@@ -17,11 +17,13 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
     return <GroupContainer group={item} key={item._id} />;
   };
 
+  const renderHiddenItem = ({ item }: { item: Group }) => <HiddenItemGroup groupId={item._id} />;
+
   return (
     <SwipeListView
       data={groups}
       renderItem={renderGroupItem}
-      renderHiddenItem={() => <HiddenItemGroup />}
+      renderHiddenItem={renderHiddenItem}
       rightOpenValue={deviceWidth * -0.6}
       disableRightSwipe
       rightActionValue={-100}
