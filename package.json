@@ -11,7 +11,8 @@
     "prettify:ci": "prettier \"app/**/*\" --check",
     "typescript": "tsc",
     "eslint:ci": "eslint \"app/**/*.spec.{ts,tsx,js,jsx}\"",
-    "android:clean": "cd android && ./gradlew clean && cd .."
+    "android:clean": "cd android && ./gradlew clean && cd ..",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@georstat/react-native-image-cache": "^2.3.0",

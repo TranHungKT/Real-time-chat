@@ -82,6 +82,7 @@ export const messagesSlice = createSlice({
     deleteMessagesByGroupId(state, action: PayloadAction<string>) {
       const groupMessages = state.groupMessages;
       const groupId = action.payload;
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [groupId]: value, ...rest } = groupMessages;
 
