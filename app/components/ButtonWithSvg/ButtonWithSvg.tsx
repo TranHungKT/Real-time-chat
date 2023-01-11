@@ -1,12 +1,12 @@
 import { TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
-interface ButtonSvgProps {
+interface ButtonWithSvgProps {
   iconSvg: string;
   onPress: () => void;
 }
 
-export const ButtonSvg = (props: ButtonSvgProps) => {
+export const ButtonWithSvg = (props: ButtonWithSvgProps) => {
   const { iconSvg, onPress } = props;
   return (
     <TouchableOpacity onPress={onPress}>

@@ -1,1 +1,0 @@
-export { ButtonSvg } from './ButtonSvg';

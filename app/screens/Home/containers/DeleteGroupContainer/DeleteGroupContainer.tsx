@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ButtonSvg } from '@Components/index';
+import { ButtonWithSvg } from '@Components/index';
 import { DeleteSvg } from '@Constants/index';
 import { deleteGroupAction } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
@@ -32,7 +32,7 @@ export const DeleteGroupContainer = (props: DeleteGroupContainerProps) => {
 
   return (
     <>
-      <ButtonSvg iconSvg={DeleteSvg} onPress={handleDeleteGroupChat} />
+      <ButtonWithSvg iconSvg={DeleteSvg} onPress={handleDeleteGroupChat} />
       <DeleteGroupModal isShowModal={isShowModal} onCancel={handleCancel} onDelete={handleDelete} />
     </>
   );
