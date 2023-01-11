@@ -1,3 +1,5 @@
+import { messagesActions } from 'stores/messages';
+
 import {
   GetListGroupResponse,
   Group,
@@ -5,8 +7,12 @@ import {
   TypingEventPayload,
   UpdateMessageStatusPayload,
 } from '@Models/index';
+import { deleteGroupService } from '@Services/index';
 import { normalizeGroup } from '@Utils/groupUtils';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { RootState } from '../store';
+import { userTokenSelector } from '../user';
 
 export interface GroupState {
   groups: {
@@ -14,11 +20,33 @@ export interface GroupState {
   };
   count: number;
   currentGroupId?: string;
+
+  isDeletingGroup: boolean;
+  errorDeletingGroup?: string;
 }
+
+const DELETE_GROUP_ACTION = 'Delete-group';
+
+export const deleteGroupAction = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: string; state: RootState }
+>(DELETE_GROUP_ACTION, async (groupId, thunkApi) => {
+  try {
+    const token = userTokenSelector(thunkApi.getState());
+
+    await deleteGroupService({ token, groupId });
+    thunkApi.dispatch(messagesActions.deleteMessagesByGroupId(groupId));
+    return;
+  } catch (error) {
+    return thunkApi.rejectWithValue((error as Error).message);
+  }
+});
 
 const initialState: GroupState = {
   groups: {},
   count: 0,
+  isDeletingGroup: false,
 };
 
 export const groupsSlice = createSlice({
@@ -86,6 +114,25 @@ export const groupsSlice = createSlice({
         }
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(deleteGroupAction.pending, (state) => {
+      state.isDeletingGroup = true;
+      state.errorDeletingGroup = undefined;
+    });
+    builder.addCase(deleteGroupAction.fulfilled, (state, action) => {
+      const groupId = action.meta.arg;
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [groupId]: value, ...rest } = state.groups;
+
+      state.isDeletingGroup = false;
+      state.groups = rest;
+    });
+    builder.addCase(deleteGroupAction.rejected, (state, action) => {
+      state.isDeletingGroup = false;
+      state.errorDeletingGroup = action.payload;
+    });
   },
 });
 

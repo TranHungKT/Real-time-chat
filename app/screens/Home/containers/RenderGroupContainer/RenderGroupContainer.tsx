@@ -2,7 +2,11 @@ import { useSelector } from 'react-redux';
 
 import { Group as IGroup, MessageStatus } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
-import { groupsActions } from '@Stores/groups';
+import {
+  getDeletingGroupErrorSelector,
+  getIsDeletingGroupSelector,
+  groupsActions,
+} from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
 import { getUserStatusByIdSelector, userIdSelector } from '@Stores/user';
@@ -20,6 +24,8 @@ export const RenderGroupContainer = (props: RenderGroupContainerProps) => {
   const { members } = group;
 
   const dispatch = useAppDispatch();
+  const isDeleting = useSelector(getIsDeletingGroupSelector);
+  const errorDeleting = useSelector(getDeletingGroupErrorSelector);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
@@ -64,6 +70,8 @@ export const RenderGroupContainer = (props: RenderGroupContainerProps) => {
       onClickGroup={handleClickGroup}
       numberOfUnReadMessage={groupMessagesUnSeen?.length}
       userStatus={userStatus}
+      isDeleting={isDeleting}
+      errorDeleting={errorDeleting}
     />
   );
 };

@@ -77,3 +77,21 @@ export const fetchImagesOfGroups = async ({
     throw new Error(error as string);
   }
 };
+
+export const deleteGroupService = async ({
+  token,
+  groupId,
+}: {
+  token: string;
+  groupId: string;
+}) => {
+  try {
+    return await axios.delete(`${BASE_URL}delete-group?groupId=${groupId}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
