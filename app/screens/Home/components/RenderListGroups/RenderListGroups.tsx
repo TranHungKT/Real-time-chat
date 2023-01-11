@@ -1,4 +1,4 @@
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 
 import { deviceWidth } from '@Constants/index';
 import { Group } from '@Models/index';
@@ -17,7 +17,13 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
     return <GroupContainer group={item} key={item._id} />;
   };
 
-  const renderHiddenItem = ({ item }: { item: Group }) => <HiddenItemGroup groupId={item._id} />;
+  const renderHiddenItem = ({ item }: { item: Group }, rowMap: RowMap<Group>) => {
+    const handleCloseRow = () => {
+      rowMap[item._id].closeRow();
+    };
+
+    return <HiddenItemGroup groupId={item._id} onCloseRow={handleCloseRow} />;
+  };
 
   return (
     <SwipeListView
@@ -27,6 +33,8 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
       rightOpenValue={deviceWidth * -0.6}
       disableRightSwipe
       rightActionValue={-100}
+      keyExtractor={(item) => item._id}
+      closeOnRowBeginSwipe
     />
   );
 };

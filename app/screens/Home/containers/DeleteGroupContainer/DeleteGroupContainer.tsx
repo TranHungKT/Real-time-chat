@@ -13,16 +13,20 @@ import { styles } from './DeleteGroupContainerStyles';
 
 interface DeleteGroupContainerProps {
   groupId: string;
+  onCloseRow: () => void;
 }
 
 export const DeleteGroupContainer = (props: DeleteGroupContainerProps) => {
-  const { groupId } = props;
+  const { groupId, onCloseRow } = props;
 
   const dispatch = useAppDispatch();
 
   const [isShowModal, setIsShowModal] = useState(false);
 
-  const handleDeleteGroupChat = () => setIsShowModal(true);
+  const handleDeleteGroupChat = () => {
+    setIsShowModal(true);
+    onCloseRow();
+  };
   const handleCancel = () => setIsShowModal(false);
 
   const handleDelete = async () => {

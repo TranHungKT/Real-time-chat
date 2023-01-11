@@ -8,14 +8,16 @@ import { styles } from './HiddenItemGroupStyle';
 
 interface HiddenItemGroupProps {
   groupId: string;
+  onCloseRow: () => void;
 }
 
 export const HiddenItemGroup = (props: HiddenItemGroupProps) => {
+  const { groupId, onCloseRow } = props;
   return (
     <View style={styles.container}>
-      <ButtonSvg onPress={() => {}} iconSvg={AchiveChatSvg} />
-      <ButtonSvg onPress={() => {}} iconSvg={SeenMessageSvg} />
-      <DeleteGroupContainer groupId={props.groupId} />
+      <ButtonSvg onPress={onCloseRow} iconSvg={AchiveChatSvg} />
+      <ButtonSvg onPress={onCloseRow} iconSvg={SeenMessageSvg} />
+      <DeleteGroupContainer groupId={groupId} onCloseRow={onCloseRow} />
     </View>
   );
 };
