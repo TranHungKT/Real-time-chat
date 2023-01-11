@@ -15,8 +15,6 @@ interface GroupProps {
   onClickGroup: () => void;
   numberOfUnReadMessage?: number;
   userStatus: UserStatus;
-  isDeleting?: boolean;
-  errorDeleting?: string;
 }
 
 export const Group = (props: GroupProps) => {

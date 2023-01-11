@@ -25,6 +25,8 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
     return <HiddenItemGroup groupId={item._id} onCloseRow={handleCloseRow} />;
   };
 
+  const getKeyExtractor = () => (item: Group) => item._id;
+
   return (
     <SwipeListView
       data={groups}
@@ -33,7 +35,7 @@ export const RenderListGroups = (props: RenderListGroupsProps) => {
       rightOpenValue={deviceWidth * -0.6}
       disableRightSwipe
       rightActionValue={-100}
-      keyExtractor={(item) => item._id}
+      keyExtractor={getKeyExtractor()}
       closeOnRowBeginSwipe
     />
   );

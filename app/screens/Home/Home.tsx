@@ -27,14 +27,9 @@ export const HomeScreen = () => {
     data: listGroups,
     isFetching,
     error,
-  } = useQuery(
-    ['getListGroups', token],
-    () =>
-      // TODO: PAGINATION HERE
-      fetchListGroups({ token, pageNumber: 1, pageSize: PAGE_SIZE }),
-    {
-      keepPreviousData: false,
-    },
+  } = useQuery(['getListGroups', token], () =>
+    // TODO: PAGINATION HERE
+    fetchListGroups({ token, pageNumber: 1, pageSize: PAGE_SIZE }),
   );
 
   const { data: usersStatus } = useQuery(

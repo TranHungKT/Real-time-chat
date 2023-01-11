@@ -5,8 +5,6 @@ import { userIdSelector } from '../user';
 
 export const getGroupsSelector = (state: RootState) => state.groups.groups;
 export const getCurrentGroupIdSelector = (state: RootState) => state.groups.currentGroupId;
-export const getIsDeletingGroupSelector = (state: RootState) => state.groups.isDeletingGroup;
-export const getDeletingGroupErrorSelector = (state: RootState) => state.groups.errorDeletingGroup;
 
 export const currentGroupSelector = createSelector(
   getGroupsSelector,
