@@ -14,10 +14,7 @@ import { userActions, userIdSelector, userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
 import { styles } from './HomeStyles';
-import { Header } from './components';
-import { EmptyListOfGroups } from './components/EmptyListOfGroups';
-import { ErrorGetList } from './components/ErrorGetList';
-import { GroupContainer } from './containers/GroupContainer';
+import { RenderListGroups, EmptyListOfGroups, ErrorGetList, Header } from './components';
 
 export const HomeScreen = () => {
   const token = useSelector(userTokenSelector);
@@ -51,7 +48,7 @@ export const HomeScreen = () => {
   );
 
   const renderComponent = () => {
-    if (isFetching || (!!listGroups?.list.length && isEmpty(groups))) {
+    if (isFetching) {
       return <ActivityIndicator animating={true} style={styles.activityIndicator} />;
     }
 
@@ -59,15 +56,13 @@ export const HomeScreen = () => {
       return <ErrorGetList />;
     }
 
-    if (!listGroups?.list.length) {
+    if (isEmpty(groups)) {
       return <EmptyListOfGroups />;
     }
 
     return (
       <View style={styles.content}>
-        {Object.values(groups).map((group) => (
-          <GroupContainer group={group} key={group._id} />
-        ))}
+        <RenderListGroups groups={Object.values(groups)} />
       </View>
     );
   };
@@ -83,15 +78,14 @@ export const HomeScreen = () => {
     if (usersStatus) {
       dispatch(userActions.setUsersStatus(usersStatus));
     }
-  });
+  }, [dispatch, usersStatus]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+      <View style={styles.header}>
         <Header />
-
-        {renderComponent()}
       </View>
+      {renderComponent()}
     </SafeAreaView>
   );
 };
