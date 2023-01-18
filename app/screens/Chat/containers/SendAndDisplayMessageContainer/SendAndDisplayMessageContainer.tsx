@@ -41,7 +41,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       newMessages.forEach((newMessage) => {
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroupId,
-          message: { text: newMessage.text, user: userId, image: newMessage.image },
+          message: { text: newMessage.text, user: userId, images: newMessage.images },
         });
       });
     },

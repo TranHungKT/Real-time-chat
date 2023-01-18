@@ -12,11 +12,13 @@ export const uploadImages = async ({
 }) => {
   const formData = new FormData();
 
-  formData.append('photos', {
-    name: images[0].fileName,
-    uri: images[0].uri,
-    type: images[0].type,
-  } as any);
+  images.forEach((image) => {
+    formData.append('photos', {
+      name: image.fileName,
+      uri: image.uri,
+      type: image.type,
+    } as any);
+  });
 
   return axios.post(`${BASE_URL}upload-image`, formData, {
     headers: {

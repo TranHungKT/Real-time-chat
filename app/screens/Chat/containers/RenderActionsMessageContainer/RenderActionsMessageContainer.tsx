@@ -11,7 +11,7 @@ import { palette, sizes } from '@Themes/index';
 import { useMutation } from '@tanstack/react-query';
 
 interface RenderActionsMessageContainerProps {
-  onChooseImage: (fileUrl: string) => void;
+  onChooseImage: (fileUrls: string[]) => void;
 }
 
 export const RenderActionsMessageContainer = (props: RenderActionsMessageContainerProps) => {
@@ -48,7 +48,7 @@ export const RenderActionsMessageContainer = (props: RenderActionsMessageContain
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      onChooseImage(mutation.data.data.fileUrl);
+      onChooseImage(mutation.data.data.fileUrls);
     }
   }, [mutation.data, mutation.isSuccess, onChooseImage]);
 
