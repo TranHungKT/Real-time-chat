@@ -30,6 +30,7 @@ export const RenderActionsMessageContainer = (props: RenderActionsMessageContain
           maxHeight: IMAGE_HEIGHT,
           maxWidth: IMAGE_WIDTH,
           quality: IMAGE_QUALITY,
+          selectionLimit: 20,
         },
         (response: ImagePickerResponse) => {
           if (response.assets) {
