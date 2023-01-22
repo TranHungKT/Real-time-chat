@@ -4,7 +4,7 @@ import { IMessage, MessageImageProps, Bubble, BubbleProps } from 'react-native-g
 import { styles } from './RenderMessageImageStyles';
 
 interface RenderMessageImageProps {
-  renderBubbleMessages: Omit<BubbleProps<IMessage>, 'renderMessageImage'>;
+  renderBubbleMessages: BubbleProps<IMessage>;
 }
 
 export const RenderMessageImage = (props: RenderMessageImageProps) => {
