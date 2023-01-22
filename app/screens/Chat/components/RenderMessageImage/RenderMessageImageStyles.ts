@@ -1,10 +1,11 @@
-import { ImageStyle, StyleSheet } from 'react-native';
+import { ImageStyle, StyleSheet, ViewStyle } from 'react-native';
 
 import { palette } from '@Themes/index';
 
 interface Styles {
   image: ImageStyle;
   wrapperImageStyle: ImageStyle;
+  listImages: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -14,9 +15,14 @@ export const styles = StyleSheet.create<Styles>({
     borderRadius: 20,
     marginBottom: 5,
     overflow: 'hidden',
+    marginHorizontal: 2,
   },
 
   wrapperImageStyle: {
+    backgroundColor: palette.white,
+  },
+
+  listImages: {
     backgroundColor: palette.white,
   },
 });

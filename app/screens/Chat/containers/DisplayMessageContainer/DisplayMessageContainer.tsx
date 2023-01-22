@@ -35,7 +35,8 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     (newMessages: IMessage[] = []) => {
       const newMess = newMessages.map((message) => ({
         text: message.text,
-        images: message.image,
+        listImages: message.listImages?.length ? message.listImages : undefined,
+        image: message.listImages?.length ? 'image' : undefined,
       }));
       onSendMessages(newMess);
     },
@@ -51,7 +52,7 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     (fileUrls: string[]) => {
       onSendMessages([
         {
-          images: fileUrls,
+          listImages: fileUrls,
         },
       ]);
     },
