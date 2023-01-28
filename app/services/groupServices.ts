@@ -65,7 +65,7 @@ export const fetchImagesOfGroups = async ({
 }: {
   token: string;
   groupId: string;
-}): Promise<{ id: string; listImages: string[] }[]> => {
+}): Promise<string[]> => {
   try {
     const response = await axios.get(`${BASE_URL}get-list-images?groupId=${groupId}`, {
       headers: {

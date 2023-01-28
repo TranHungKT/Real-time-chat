@@ -1,4 +1,4 @@
-import { flatMap, map } from 'lodash';
+import { flatMap } from 'lodash';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import ImageView from 'react-native-image-viewing';
@@ -48,7 +48,7 @@ export const ImagesContainer = () => {
     return <></>;
   }
 
-  const imagesData = data.map((messsage) => messsage.listImages.map((image) => ({ uri: image })));
+  const imagesData = data.map((image) => ({ uri: image }));
 
   const getKeyExtractorForImagesView = (item: ImageSource, index: number) =>
     item.uri + index + KEY_IMAGE_VIEW;
@@ -57,7 +57,7 @@ export const ImagesContainer = () => {
     <>
       <View style={styles.blankView} />
       <FlatList
-        data={flatMap(map(data, 'listImages'))}
+        data={data}
         renderItem={renderItem}
         style={styles.container}
         numColumns={3}
