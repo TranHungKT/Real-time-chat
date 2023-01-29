@@ -1,4 +1,3 @@
-import { flatMap } from 'lodash';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import ImageView from 'react-native-image-viewing';
@@ -64,7 +63,7 @@ export const ImagesContainer = () => {
         contentContainerStyle={styles.contentContainerStyle}
       />
       <ImageView
-        images={flatMap(imagesData)}
+        images={imagesData}
         imageIndex={currentImage}
         visible={visible}
         onRequestClose={handleCloseImage}

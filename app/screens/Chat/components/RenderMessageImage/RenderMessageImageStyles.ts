@@ -12,10 +12,10 @@ export const styles = StyleSheet.create<Styles>({
   image: {
     minWidth: 100,
     minHeight: 100,
-    borderRadius: 20,
-    marginBottom: 5,
+    borderRadius: 5,
+    marginBottom: 1.5,
     overflow: 'hidden',
-    marginHorizontal: 2,
+    marginHorizontal: 1.5,
   },
 
   wrapperImageStyle: {
@@ -23,6 +23,6 @@ export const styles = StyleSheet.create<Styles>({
   },
 
   listImages: {
-    backgroundColor: palette.white,
+    borderRadius: 40,
   },
 });
