@@ -1,6 +1,5 @@
+import { Image, FlatList, ListRenderItemInfo } from 'react-native';
 import { IMessage, MessageImageProps, Bubble, BubbleProps } from 'react-native-gifted-chat';
-
-import { CachedImage } from '@georstat/react-native-image-cache';
 
 import { styles } from './RenderMessageImageStyles';
 
@@ -10,9 +9,19 @@ interface RenderMessageImageProps {
 
 export const RenderMessageImage = (props: RenderMessageImageProps) => {
   const { renderBubbleMessages } = props;
+  const renderImage = (imag: ListRenderItemInfo<string>) => (
+    <Image source={{ uri: imag.item || '' }} style={styles.image} key={imag.index} />
+  );
 
   const renderMessageImage = (message: MessageImageProps<IMessage>) => {
-    return <CachedImage source={message.currentMessage?.image || ''} style={styles.image} />;
+    return (
+      <FlatList
+        numColumns={2}
+        data={message.currentMessage?.listImages}
+        renderItem={renderImage}
+        style={styles.listImages}
+      />
+    );
   };
 
   return (

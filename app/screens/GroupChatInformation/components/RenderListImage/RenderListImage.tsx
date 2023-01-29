@@ -3,10 +3,7 @@ import { Image, TouchableOpacity } from 'react-native';
 import { styles } from './RenderListImageStyles';
 
 interface RenderListImageProps {
-  item: {
-    id: string;
-    image: string;
-  };
+  item: string;
 
   onPressImage: () => void;
 }
@@ -18,7 +15,7 @@ export const RenderListImage = (props: RenderListImageProps) => {
       <Image
         style={styles.image}
         source={{
-          uri: item.image,
+          uri: item,
         }}
         resizeMode="cover"
       />

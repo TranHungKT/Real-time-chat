@@ -35,7 +35,8 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     (newMessages: IMessage[] = []) => {
       const newMess = newMessages.map((message) => ({
         text: message.text,
-        image: message.image,
+        listImages: message.listImages?.length ? message.listImages : undefined,
+        image: message.listImages?.length ? 'image' : undefined,
       }));
       onSendMessages(newMess);
     },
@@ -48,10 +49,10 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   };
 
   const handleChooseImage = useCallback(
-    (fileUrl: string) => {
+    (fileUrls: string[]) => {
       onSendMessages([
         {
-          image: fileUrl,
+          listImages: fileUrls,
         },
       ]);
     },

@@ -7,5 +7,5 @@ export interface UploadImagePayload {
 
 export interface NewMessageContent {
   text?: string;
-  image?: string;
+  listImages?: string[];
 }
