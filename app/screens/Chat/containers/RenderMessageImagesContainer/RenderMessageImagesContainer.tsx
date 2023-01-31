@@ -29,7 +29,6 @@ export const RenderMessageImagesContainer = (props: RenderMessageImagesContainer
       case 1: {
         return <RenderOneImageMessage image={listImages[0]} isMyMessage={isMyMessage(user?._id)} />;
       }
-
       case 2: {
         return <RenderTwoImageMessage images={listImages} isMyMessage={isMyMessage(user?._id)} />;
       }

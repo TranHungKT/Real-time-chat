@@ -6,8 +6,8 @@ interface Styles {
 
 export const styles = StyleSheet.create<Styles>({
   image: {
-    minWidth: 75,
-    minHeight: 75,
+    width: 75,
+    height: 75,
     borderRadius: 5,
     marginBottom: 1.5,
     overflow: 'hidden',
