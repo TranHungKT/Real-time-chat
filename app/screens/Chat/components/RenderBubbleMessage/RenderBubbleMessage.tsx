@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { IMessage, BubbleProps, Bubble } from 'react-native-gifted-chat';
 
+import { RenderMessageImagesContainer } from '../../containers/RenderMessageImagesContainer/RenderMessageImagesContainer';
 import { RenderSeenContainer } from '../../containers/RenderSeenContainer';
-import { RenderMessageImage } from '../RenderMessageImage';
 import { RenderTicks } from '../RenderTicks';
 import { styles } from './RenderBubbleMessageStyles';
 
@@ -17,7 +17,7 @@ export const RenderBubbleMessage = (props: RenderBubbleMessageProps) => {
 
   const renderBubble = () => {
     if (bubbleMessages.currentMessage && bubbleMessages.currentMessage.image) {
-      return <RenderMessageImage renderBubbleMessages={bubbleMessages} />;
+      return <RenderMessageImagesContainer renderBubbleMessages={bubbleMessages} />;
     }
     return <Bubble {...bubbleMessages} renderTicks={() => <></>} />;
   };
