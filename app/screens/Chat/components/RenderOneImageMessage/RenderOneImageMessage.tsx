@@ -4,9 +4,17 @@ import { styles } from './RenderOneImageMessageStyles';
 
 interface RenderOneImageMessageProps {
   image: string;
+  isMyMessage: boolean;
 }
 
 export const RenderOneImageMessage = (props: RenderOneImageMessageProps) => {
-  const { image } = props;
-  return <Image source={{ uri: image }} style={styles.container} resizeMode="cover" />;
+  const { image, isMyMessage } = props;
+  return (
+    <Image
+      source={{ uri: image }}
+      style={[styles.container, !isMyMessage && styles.notMyImage]}
+      resizeMode="cover"
+      resizeMethod="scale"
+    />
+  );
 };

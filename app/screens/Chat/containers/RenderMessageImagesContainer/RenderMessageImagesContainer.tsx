@@ -1,6 +1,12 @@
-import { Image, FlatList, ListRenderItemInfo } from 'react-native';
 import { IMessage, MessageImageProps, Bubble, BubbleProps } from 'react-native-gifted-chat';
-import { RenderOneImageMessage } from 'screens/Chat/components';
+import { useSelector } from 'react-redux';
+import {
+  RenderOneImageMessage,
+  RenderTwoImageMessage,
+  RenderMoreOrEqualThreeImages,
+} from 'screens/Chat/components';
+
+import { userIdSelector } from '@Stores/user';
 
 import { styles } from './RenderMessageImagesContainerStyles';
 
@@ -10,24 +16,25 @@ interface RenderMessageImagesContainerProps {
 
 export const RenderMessageImagesContainer = (props: RenderMessageImagesContainerProps) => {
   const { renderBubbleMessages } = props;
-  const renderImage = (imag: ListRenderItemInfo<string>) => (
-    <Image source={{ uri: imag.item || '' }} style={styles.image} key={imag.index} />
-  );
+  const userId = useSelector(userIdSelector);
+
+  const isMyMessage = (id?: string | number) => userId === id;
 
   const renderMessageImage = (message: MessageImageProps<IMessage>) => {
-    switch (message.currentMessage?.listImages?.length) {
+    if (!message.currentMessage) {
+      return <></>;
+    }
+    const { listImages, user } = message.currentMessage;
+    switch (listImages?.length) {
       case 1: {
-        return <RenderOneImageMessage image={message.currentMessage.listImages[0]} />;
+        return <RenderOneImageMessage image={listImages[0]} isMyMessage={isMyMessage(user?._id)} />;
+      }
+
+      case 2: {
+        return <RenderTwoImageMessage images={listImages} isMyMessage={isMyMessage(user?._id)} />;
       }
       default:
-        return (
-          <FlatList
-            numColumns={2}
-            data={message.currentMessage?.listImages}
-            renderItem={renderImage}
-            style={styles.listImages}
-          />
-        );
+        return <RenderMoreOrEqualThreeImages images={listImages || []} />;
     }
   };
 
