@@ -7,6 +7,13 @@
 
 **Here is my React Native source code for real-time messaging application capable of private messaging, video-calling, login with Facebook.**
 
+<div style="width:100%">
+    <div style="width:50%; display:inline-block">
+        <div align="center">
+          <img align="left" alt="Main" src="./intro.png">    
+        </div>    
+    </div>    
+</div>
 ## Features
 
 - Login with Facebook Using OAuth2 Authentication
