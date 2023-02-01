@@ -10,7 +10,7 @@
 <div style="width:100%">
     <div style="width:50%; display:inline-block">
         <div align="center">
-          <img align="left" alt="Main" src="./intro.png">    
+          <img align="left" alt="Main" src="./main.png">    
         </div>    
     </div>    
 </div>
