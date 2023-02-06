@@ -10,7 +10,6 @@ import { generateName } from '@Utils/index';
 
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
 import { RenderScrollToBottom } from '../../components/RenderScrollToBottom';
-import { ImagesGalleryContainer } from '../ImagesGalleryContainer';
 import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
 import { TypingContainer } from '../TypingContainer';
 import { styles } from './DisplayMessageContainerStyles';
@@ -113,7 +112,6 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
         scrollToBottomComponent={renderScrollToBottomComponent}
         scrollToBottomStyle={styles.scollBottomStyle}
       />
-      <ImagesGalleryContainer />
     </>
   );
 };
