@@ -1,3 +1,5 @@
+import { flatMapDeep, map } from 'lodash';
+
 import { MessageStatus } from '@Models/index';
 import { userIdSelector } from '@Stores/user';
 import { createSelector } from '@reduxjs/toolkit';
@@ -37,4 +39,15 @@ export const getCurrentPageSelector = createSelector(
       }
       return 1;
     },
+);
+
+export const getImagesForCurrentGroupSelector = createSelector(
+  getGroupMessagesSelector,
+  getCurrentGroupIdSelector,
+  (groupsMessages, groupId) => {
+    if (!groupId || !groupsMessages[groupId]) {
+      return undefined;
+    }
+    return flatMapDeep(map(groupsMessages[groupId].messages, 'listImages'));
+  },
 );

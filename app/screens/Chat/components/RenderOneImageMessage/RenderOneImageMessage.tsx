@@ -1,4 +1,7 @@
-import { Image } from 'react-native';
+import { useContext } from 'react';
+import { Image, TouchableOpacity } from 'react-native';
+
+import { ImageGalleryContext } from '@Providers/index';
 
 import { styles } from './RenderOneImageMessageStyles';
 
@@ -9,12 +12,18 @@ interface RenderOneImageMessageProps {
 
 export const RenderOneImageMessage = (props: RenderOneImageMessageProps) => {
   const { image, isMyMessage } = props;
+
+  const { onClickImage } = useContext(ImageGalleryContext);
+
+  const handleClickImage = () => onClickImage(image);
   return (
-    <Image
-      source={{ uri: image }}
-      style={[styles.container, !isMyMessage && styles.notMyImage]}
-      resizeMode="cover"
-      resizeMethod="scale"
-    />
+    <TouchableOpacity onPress={handleClickImage}>
+      <Image
+        source={{ uri: image }}
+        style={[styles.container, !isMyMessage && styles.notMyImage]}
+        resizeMode="cover"
+        resizeMethod="scale"
+      />
+    </TouchableOpacity>
   );
 };
