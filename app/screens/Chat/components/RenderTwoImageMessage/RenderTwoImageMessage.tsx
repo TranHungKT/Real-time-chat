@@ -1,15 +1,19 @@
+import { useContext } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
+
+import { ImageGalleryContext } from '@Providers/index';
 
 import { styles } from './RenderTwoImageMessageStyles';
 
 interface RenderTwoImageMessageProps {
   images: string[];
   isMyMessage: boolean;
-  onClickImage: (image: string) => void;
 }
 
 export const RenderTwoImageMessage = (props: RenderTwoImageMessageProps) => {
-  const { images, isMyMessage, onClickImage } = props;
+  const { images, isMyMessage } = props;
+  const { onClickImage } = useContext(ImageGalleryContext);
+
   const handleClickImage = (image: string) => () => onClickImage(image);
 
   if (images.length !== 2) {

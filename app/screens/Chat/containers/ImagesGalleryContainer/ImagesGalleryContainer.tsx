@@ -32,6 +32,7 @@ export const ImagesGalleryContainer = (props: ImagesGalleryContainerProps) => {
   const getListImagesWithUri = () => listImages.map((image) => ({ uri: image }));
   const getKeyExtractorForImagesView = (item: ImageSource, index: number) =>
     item.uri + index + KEY_CHAT_IMAGE_VIEW;
+
   return (
     <ImageView
       visible={isVisible}

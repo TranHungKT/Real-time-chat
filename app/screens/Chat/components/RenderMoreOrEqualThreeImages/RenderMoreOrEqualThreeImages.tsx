@@ -1,14 +1,17 @@
+import { useContext } from 'react';
 import { FlatList, ListRenderItemInfo, Image, TouchableOpacity } from 'react-native';
+
+import { ImageGalleryContext } from '@Providers/index';
 
 import { styles } from './RenderMoreOrEqualThreeImagesStyles';
 
 interface RenderMoreOrEqualThreeImagesProps {
   images: string[];
-  onClickImage: (image: string) => void;
 }
 
 export const RenderMoreOrEqualThreeImages = (props: RenderMoreOrEqualThreeImagesProps) => {
-  const { images, onClickImage } = props;
+  const { images } = props;
+  const { onClickImage } = useContext(ImageGalleryContext);
   const handleClickImage = (image: string) => () => onClickImage(image);
 
   const renderImage = (item: ListRenderItemInfo<string>) => {

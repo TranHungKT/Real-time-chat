@@ -1,15 +1,19 @@
+import { useContext } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
+
+import { ImageGalleryContext } from '@Providers/index';
 
 import { styles } from './RenderOneImageMessageStyles';
 
 interface RenderOneImageMessageProps {
   image: string;
   isMyMessage: boolean;
-  onClickImage: (image: string) => void;
 }
 
 export const RenderOneImageMessage = (props: RenderOneImageMessageProps) => {
-  const { image, isMyMessage, onClickImage } = props;
+  const { image, isMyMessage } = props;
+
+  const { onClickImage } = useContext(ImageGalleryContext);
 
   const handleClickImage = () => onClickImage(image);
   return (
