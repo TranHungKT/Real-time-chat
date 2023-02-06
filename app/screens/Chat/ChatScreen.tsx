@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { styles } from './ChatScreenStyles';
 import { Header } from './components/Header';
-import { ImagesGalleryContainer } from './containers/ImagesGalleryContainer';
+import { ImageGalleryContainer } from './containers/ImageGalleryContainer';
 import { ListChatsContainer } from './containers/ListChatsContainer';
 
 export const ChatScreen = () => {
@@ -62,7 +62,7 @@ export const ChatScreen = () => {
           onClickRightIcon={handleClickRightIcon}
         />
         <ListChatsContainer />
-        <ImagesGalleryContainer
+        <ImageGalleryContainer
           currentImage={currentImageUri}
           onCloseImage={handleCloseModalImage}
           isVisible={isVisibleImage}

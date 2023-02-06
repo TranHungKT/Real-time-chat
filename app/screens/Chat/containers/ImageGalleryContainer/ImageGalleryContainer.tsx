@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { getImagesForCurrentGroupSelector } from '@Stores/messages';
 
-interface ImagesGalleryContainerProps {
+interface ImageGalleryContainerProps {
   currentImage: string;
   isVisible: boolean;
   onCloseImage: () => void;
@@ -12,7 +12,7 @@ interface ImagesGalleryContainerProps {
 
 const KEY_CHAT_IMAGE_VIEW = 'KEY_CHAT_IMAGE_VIEW';
 
-export const ImagesGalleryContainer = (props: ImagesGalleryContainerProps) => {
+export const ImageGalleryContainer = (props: ImageGalleryContainerProps) => {
   const { isVisible, currentImage, onCloseImage } = props;
 
   const listImages = useSelector(getImagesForCurrentGroupSelector);
