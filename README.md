@@ -27,6 +27,7 @@
 - Online Presence Indicators
 - Message History
 - List Images History
+- Modal View Image
 - Groups List
 
 # Installation
