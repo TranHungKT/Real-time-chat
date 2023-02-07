@@ -1,0 +1,1 @@
+export { CustomKeyboardSticker } from './CustomKeyboardSticker';
