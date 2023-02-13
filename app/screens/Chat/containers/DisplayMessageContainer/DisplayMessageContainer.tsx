@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import { GiftedChat, IMessage, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
+import { CustomKeyboardRegistry } from '@Components/CustomKeyboard/CustomKeyboardRegistry/CustomKeyboardRegistry';
 import { NewMessageContent } from '@Models/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
-import NewKeyboard from '../../../../components/Keyboard';
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
 import { RenderScrollToBottom } from '../../components/RenderScrollToBottom';
 import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
@@ -80,6 +80,7 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     );
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderActions = () => {
     return <RenderActionsMessageContainer onChooseImage={handleChooseImage} />;
   };
@@ -93,28 +94,26 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <GiftedChat
         messages={messages}
         text={customText}
         user={generateUser()}
         onInputTextChanged={handleTextInputChanged}
         onSend={handleSendMessage}
-        keyboardShouldPersistTaps="never"
-        forceGetKeyboardHeight={true}
         loadEarlier={isLoadEarlier()}
         onLoadEarlier={onLoadEarlierMessages}
         renderFooter={renderFooter}
         renderBubble={renderBubble}
-        renderActions={renderActions}
+        // renderActions={renderActions}
         renderChatFooter={renderChatFooter}
         infiniteScroll
         scrollToBottom
         scrollToBottomComponent={renderScrollToBottomComponent}
         scrollToBottomStyle={styles.scollBottomStyle}
         isKeyboardInternallyHandled={false}
+        renderComposer={() => <CustomKeyboardRegistry />}
       />
-      <NewKeyboard />
-    </>
+    </View>
   );
 };
