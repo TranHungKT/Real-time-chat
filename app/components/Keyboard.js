@@ -113,6 +113,7 @@ export default class KeyboardAccessoryViewScreen extends PureComponent {
           <TextField
             // migrate
             ref={(r) => {
+              console.log('re', r);
               this.textInputRef = r;
             }}
             containerStyle={styles.textField}

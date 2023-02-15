@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { GiftedChat, IMessage, BubbleProps } from 'react-native-gifted-chat';
@@ -9,6 +10,7 @@ import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
+import Keboard from '../../../../components/Keyboard';
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
 import { RenderScrollToBottom } from '../../components/RenderScrollToBottom';
 import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
